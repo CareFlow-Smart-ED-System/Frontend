@@ -7,6 +7,7 @@ import {
   ImagingResponse,
   PrescribeMedicationPayload,
   PrescribeMedicationResponse,
+  MedicationsResponse,
 } from '@/types/doctors'
 import { CaseStatus } from '@/types/queue'
 
@@ -79,5 +80,19 @@ export function usePrescribeMedication(caseId: string) {
       queryClient.invalidateQueries({ queryKey: ['cases', caseId, 'medications'] })
       queryClient.invalidateQueries({ queryKey: ['cases', caseId, 'timeline'] })
     },
+  })
+}
+
+
+// GET /api/v1/cases/{caseId}/medications
+export function useMedications(caseId: string) {
+  return useQuery<MedicationsResponse>({
+    queryKey: ['cases', caseId, 'medications'],
+    queryFn: async () => {
+      const res = await api.get<MedicationsResponse>(`/cases/${caseId}/medications`)
+      return res.data
+    },
+    enabled: !!caseId,
+    staleTime: 10000,
   })
 }

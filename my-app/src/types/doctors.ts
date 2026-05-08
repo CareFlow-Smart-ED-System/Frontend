@@ -95,3 +95,11 @@ export interface PrescribeMedicationResponse {
   message: string
   medication: Medication
 }
+export interface MedicationsResponse {
+  caseId: string
+  total: number
+  page: number
+  limit: number
+  totalPages: number
+  data: Medication[]
+}
