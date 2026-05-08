@@ -2,18 +2,19 @@
 
 import { useState } from 'react'
 import { useAssignDoctor } from '@/hooks/useCases'
+import { useDoctors } from '@/hooks/useDoctors'
 import { DoctorRole } from '@/types/cases'
-import { Doctor } from '@/types/doctors'
 
 interface Props {
   caseId: string
-  doctors: Doctor[]
   onSuccess?: () => void
 }
 
-export function AssignDoctorForm({ caseId, doctors, onSuccess }: Props) {
+export function AssignDoctorForm({ caseId, onSuccess }: Props) {
   const [doctorId, setDoctorId] = useState('')
   const [role, setRole] = useState<DoctorRole>('PRIMARY')
+
+  const { data: doctorsData, isLoading: loadingDoctors } = useDoctors()
   const { mutate, isPending, isError } = useAssignDoctor(caseId)
 
   function handleSubmit(e: React.FormEvent) {
@@ -31,9 +32,12 @@ export function AssignDoctorForm({ caseId, doctors, onSuccess }: Props) {
           onChange={(e) => setDoctorId(e.target.value)}
           className="w-full border rounded px-3 py-2 text-sm"
           required
+          disabled={loadingDoctors}
         >
-          <option value="">Select a doctor</option>
-          {doctors.map((d) => (
+          <option value="">
+            {loadingDoctors ? 'Loading doctors...' : 'Select a doctor'}
+          </option>
+          {doctorsData?.data.map((d) => (
             <option key={d.doctorId} value={d.doctorId}>
               {d.displayName} — {d.specialization}
             </option>
@@ -59,7 +63,7 @@ export function AssignDoctorForm({ caseId, doctors, onSuccess }: Props) {
 
       <button
         type="submit"
-        disabled={isPending}
+        disabled={isPending || loadingDoctors}
         className="w-full bg-blue-600 text-white py-2 rounded text-sm hover:bg-blue-700 disabled:opacity-50"
       >
         {isPending ? 'Assigning...' : 'Assign Doctor'}
