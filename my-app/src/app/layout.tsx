@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "CareFlow - ED System",
   description: "CareFlow is an Emergency Department (ED) system designed to streamline patient management and improve workflow efficiency. It provides real-time updates on patient status, bed availability, and resource allocation, helping healthcare professionals deliver timely and effective care.",
    icons: {
-    icon: "/logo.png",
+    icon: "/CareFlow.png",
   },
 };
 
