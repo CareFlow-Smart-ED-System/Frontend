@@ -34,13 +34,13 @@ export function useDoctors() {
   })
 }
 
-// GET /api/v1/doctors/{doctorId}/cases
+// GET /api/v1/doctors/me/cases
 export function useDoctorCases(doctorId: string, filters?: { status?: CaseStatus }) {
   return useQuery<DoctorCasesResponse>({
-    queryKey: ['doctors', doctorId, 'cases', filters],
+    queryKey: ['doctors', 'me', 'cases', filters],
     queryFn: async () => {
       if (USE_MOCK) { await delay(); return MOCK_DOCTOR_CASES }
-      const res = await api.get<DoctorCasesResponse>(`/doctors/${doctorId}/cases`, {
+      const res = await api.get<DoctorCasesResponse>('/doctors/me/cases', {
         params: filters,
       })
       return res.data
@@ -50,13 +50,13 @@ export function useDoctorCases(doctorId: string, filters?: { status?: CaseStatus
   })
 }
 
-// GET /api/v1/cases/{caseId}/lab-results
+// GET /api/v1/doctors/cases/{caseId}/lab-results
 export function useLabResults(caseId: string) {
   return useQuery<LabResultsResponse>({
     queryKey: ['cases', caseId, 'lab-results'],
     queryFn: async () => {
       if (USE_MOCK) { await delay(); return MOCK_LAB_RESULTS }
-      const res = await api.get<LabResultsResponse>(`/cases/${caseId}/lab-results`)
+      const res = await api.get<LabResultsResponse>(`/doctors/cases/${caseId}/lab-results`)
       return res.data
     },
     enabled: !!caseId,
@@ -64,13 +64,15 @@ export function useLabResults(caseId: string) {
   })
 }
 
-// GET /api/v1/cases/{caseId}/imaging
+// GET /api/v1/doctors/cases/{caseId}/imaging-reports
 export function useImaging(caseId: string) {
   return useQuery<ImagingResponse>({
     queryKey: ['cases', caseId, 'imaging'],
     queryFn: async () => {
       if (USE_MOCK) { await delay(); return MOCK_IMAGING }
-      const res = await api.get<ImagingResponse>(`/cases/${caseId}/imaging`)
+      const res = await api.get<ImagingResponse>(
+        `/doctors/cases/${caseId}/imaging-reports`
+      )
       return res.data
     },
     enabled: !!caseId,
@@ -78,7 +80,7 @@ export function useImaging(caseId: string) {
   })
 }
 
-// POST /api/v1/cases/{caseId}/medications
+// POST /api/v1/doctors/cases/{caseId}/medications
 export function usePrescribeMedication(caseId: string) {
   const queryClient = useQueryClient()
   return useMutation<PrescribeMedicationResponse, Error, PrescribeMedicationPayload>({
@@ -98,7 +100,7 @@ export function usePrescribeMedication(caseId: string) {
         }
       }
       const res = await api.post<PrescribeMedicationResponse>(
-        `/cases/${caseId}/medications`,
+        `/doctors/cases/${caseId}/medications`,
         payload
       )
       return res.data
