@@ -106,19 +106,19 @@ export function usePrescribeMedication(caseId: string) {
       return res.data
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cases', caseId, 'medications'] })
+      queryClient.invalidateQueries({ queryKey: ['doctors', 'cases', caseId, 'medications'] })
       queryClient.invalidateQueries({ queryKey: ['cases', caseId, 'timeline'] })
     },
   })
 }
 
-// GET /api/v1/cases/{caseId}/medications
+// GET /api/v1/doctors/cases/{caseId}/medications
 export function useMedications(caseId: string) {
   return useQuery<MedicationsResponse>({
     queryKey: ['cases', caseId, 'medications'],
     queryFn: async () => {
       if (USE_MOCK) { await delay(); return MOCK_MEDICATIONS }
-      const res = await api.get<MedicationsResponse>(`/cases/${caseId}/medications`)
+      const res = await api.get<MedicationsResponse>(`/doctors/cases/${caseId}/medications`)
       return res.data
     },
     enabled: !!caseId,
