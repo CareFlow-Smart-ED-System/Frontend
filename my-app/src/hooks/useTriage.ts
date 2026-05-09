@@ -6,12 +6,25 @@ import {
   TriageRecord,
   TriageHistoryResponse,
 } from '@/types/triage'
+import { MOCK_TRIAGE, MOCK_TRIAGE_HISTORY, delay } from '@/lib/mockData'
+
+const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true'
 
 // POST /api/v1/cases/{caseId}/triage
 export function useRecordTriage(caseId: string) {
   const queryClient = useQueryClient()
   return useMutation<TriageResponse, Error, TriagePayload>({
     mutationFn: async (payload) => {
+      if (USE_MOCK) {
+        await delay(300)
+        return {
+          message: 'Triage recorded successfully',
+          triageId: `triage-${Date.now()}`,
+          caseId,
+          severity: payload.severity,
+          triageTime: new Date().toISOString(),
+        }
+      }
       const res = await api.post<TriageResponse>(`/cases/${caseId}/triage`, payload)
       return res.data
     },
@@ -32,6 +45,7 @@ export function useTriage(caseId: string) {
   return useQuery<TriageRecord>({
     queryKey: ['cases', caseId, 'triage'],
     queryFn: async () => {
+      if (USE_MOCK) { await delay(); return MOCK_TRIAGE }
       const res = await api.get<TriageRecord>(`/cases/${caseId}/triage`)
       return res.data
     },
@@ -45,6 +59,7 @@ export function useTriageHistory(caseId: string) {
   return useQuery<TriageHistoryResponse>({
     queryKey: ['cases', caseId, 'triage-history'],
     queryFn: async () => {
+      if (USE_MOCK) { await delay(); return MOCK_TRIAGE_HISTORY }
       const res = await api.get<TriageHistoryResponse>(`/cases/${caseId}/triage/history`)
       return res.data
     },
