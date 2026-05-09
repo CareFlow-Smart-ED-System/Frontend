@@ -10,9 +10,7 @@ export function useSocket(userId: string) {
   useEffect(() => {
     if (socketRef.current) return
 
-    const socket = io(process.env.NEXT_PUBLIC_API_URL!, {
-      auth: { token: localStorage.getItem('accessToken') },
-    })
+    const socket = io(process.env.NEXT_PUBLIC_API_URL!)
 
     socketRef.current = socket
 
