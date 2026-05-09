@@ -8,6 +8,7 @@ export function useSocket(userId: string) {
   const socketRef = useRef<ReturnType<typeof io> | null>(null)
 
   useEffect(() => {
+    if (!userId) return
     if (socketRef.current) return
 
     const socket = io(process.env.NEXT_PUBLIC_API_URL!)
@@ -38,5 +39,5 @@ export function useSocket(userId: string) {
       socket.disconnect()
       socketRef.current = null
     }
-  }, [userId])
+  }, [userId, queryClient])
 }
