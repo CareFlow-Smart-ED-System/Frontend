@@ -111,8 +111,8 @@ export default function CaseDetailPage() {
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${activeTab === tab.key
-                  ? "bg-red-700 text-white"
-                  : "text-gray-600 hover:bg-[#f5f7f8]"
+                ? "bg-red-700 text-white"
+                : "text-gray-600 hover:bg-[#f5f7f8]"
                 }`}
             >
               {tab.label}

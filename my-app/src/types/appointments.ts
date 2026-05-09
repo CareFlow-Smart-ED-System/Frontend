@@ -1,43 +1,43 @@
 export type AppointmentStatus = 'SCHEDULED' | 'COMPLETED' | 'CANCELLED'
 
 export interface Appointment {
-  appointmentId: string
-  patientName: string
-  doctorName: string
-  date: string
-  status: AppointmentStatus
+    appointmentId: string
+    patientName: string
+    doctorName: string
+    date: string
+    status: AppointmentStatus
 }
 
 export interface AppointmentsResponse {
-  total: number
-  page: number
-  limit: number
-  totalPages: number
-  data: Appointment[]
+    total: number
+    page: number
+    limit: number
+    totalPages: number
+    data: Appointment[]
 }
 
 export interface CreateAppointmentPayload {
-  patientId: string
-  doctorId: string
-  date: string
-  status: AppointmentStatus
+    patientId: string
+    doctorId: string
+    date: string
+    status: AppointmentStatus
 }
 
 export interface CreateAppointmentResponse {
-  message: string
-  appointmentId: string
-  patientId: string
-  doctorId: string
-  date: string
-  status: AppointmentStatus
+    message: string
+    appointmentId: string
+    patientId: string
+    doctorId: string
+    date: string
+    status: AppointmentStatus
 }
 
 export interface UpdateAppointmentPayload {
-  status: AppointmentStatus
+    status: AppointmentStatus
 }
 
 export interface UpdateAppointmentResponse {
-  message: string
-  appointmentId: string
-  status: AppointmentStatus
+    message: string
+    appointmentId: string
+    status: AppointmentStatus
 }
