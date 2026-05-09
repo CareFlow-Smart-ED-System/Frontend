@@ -8,4 +8,10 @@ api.interceptors.request.use((config) => {
   return config
 })
 
+// ── Dev only: seed a mock token so requests don't fail with 401 ──
+if (typeof window !== 'undefined' && !localStorage.getItem('accessToken')) {
+  localStorage.setItem('accessToken', 'mock-token-replace-when-auth-is-ready')
+}
+// ─────────────────────────────────────────────────────────────────
+
 export default api 
