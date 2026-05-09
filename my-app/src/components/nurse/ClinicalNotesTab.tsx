@@ -21,20 +21,20 @@ export function ClinicalNotesTab({ caseId, userRole }: Props) {
 
       {/* Both roles: view notes */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-700 mb-3">Clinical Notes</h3>
+        <h3 className="text-sm font-semibold text-gray-900 mb-3">Clinical Notes</h3>
 
-        {isLoading && <p className="text-sm text-gray-400">Loading...</p>}
-        {isError && <p className="text-sm text-red-500">Failed to load notes.</p>}
+        {isLoading && <p className="text-sm text-gray-700">Loading...</p>}
+        {isError && <p className="text-sm text-red-600">Failed to load notes.</p>}
 
         {!isLoading && !isError && data?.data.length === 0 && (
-          <p className="text-sm text-gray-400">No clinical notes yet.</p>
+          <p className="text-sm text-gray-700">No clinical notes yet.</p>
         )}
 
         <div className="space-y-3">
           {data?.data.map((note: NoteRecord) => (
-            <div key={note.id} className="bg-white border rounded-lg p-4">
-              <p className="text-sm text-gray-800">{note.note}</p>
-              <p className="text-xs text-gray-400 mt-2">
+            <div key={note.id} className="bg-white border border-gray-100 rounded-2xl p-4">
+              <p className="text-sm text-gray-900">{note.note}</p>
+              <p className="text-xs text-gray-700 mt-2">
                 {new Date(note.timestamp).toLocaleString()}
               </p>
             </div>
@@ -61,9 +61,9 @@ function AddNoteForm({ caseId }: { caseId: string }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-gray-50 border rounded-lg p-4 space-y-3"
+      className="bg-white border border-gray-100 rounded-2xl p-4 space-y-3"
     >
-      <h3 className="text-sm font-semibold text-gray-700">Add Clinical Note</h3>
+      <h3 className="text-sm font-semibold text-gray-900">Add Clinical Note</h3>
 
       <textarea
         value={note}

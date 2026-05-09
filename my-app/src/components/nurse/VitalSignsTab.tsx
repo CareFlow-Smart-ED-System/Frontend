@@ -21,39 +21,39 @@ export function VitalSignsTab({ caseId, userRole }: Props) {
 
       {/* Both roles: view history */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-700 mb-3">Recorded Vital Signs</h3>
+        <h3 className="text-sm font-semibold text-gray-900 mb-3">Recorded Vital Signs</h3>
 
-        {isLoading && <p className="text-sm text-gray-400">Loading...</p>}
-        {isError && <p className="text-sm text-red-500">Failed to load vital signs.</p>}
+        {isLoading && <p className="text-sm text-gray-700">Loading...</p>}
+        {isError && <p className="text-sm text-red-600">Failed to load vital signs.</p>}
 
         {!isLoading && !isError && data?.data.length === 0 && (
-          <p className="text-sm text-gray-400">No vital signs recorded yet.</p>
+          <p className="text-sm text-gray-700">No vital signs recorded yet.</p>
         )}
 
         {data?.data && data.data.length > 0 && (
-          <table className="w-full text-sm border rounded-lg overflow-hidden">
+          <table className="w-full text-sm">
             <thead>
-              <tr className="bg-gray-100">
-                <th className="text-left px-3 py-2">Time</th>
-                <th className="text-left px-3 py-2">Temp (°C)</th>
-                <th className="text-left px-3 py-2">Systolic</th>
-                <th className="text-left px-3 py-2">Diastolic</th>
-                <th className="text-left px-3 py-2">Heart Rate</th>
+              <tr className="bg-[#f5f7f8] text-gray-600">
+                <th className="text-left px-4 py-3 font-medium">Time</th>
+                <th className="text-left px-4 py-3 font-medium">Temp (°C)</th>
+                <th className="text-left px-4 py-3 font-medium">Systolic</th>
+                <th className="text-left px-4 py-3 font-medium">Diastolic</th>
+                <th className="text-left px-4 py-3 font-medium">Heart Rate</th>
               </tr>
             </thead>
             <tbody>
               {data.data.map((v: VitalSignsRecord) => (
-                <tr key={v.id} className="border-b">
-                  <td className="px-3 py-2 text-gray-500">
+                <tr key={v.id} className="border-b border-gray-100 text-gray-900">
+                  <td className="px-4 py-3">
                     {new Date(v.timestamp).toLocaleTimeString([], {
                       hour: '2-digit',
                       minute: '2-digit',
                     })}
                   </td>
-                  <td className="px-3 py-2">{v.temperature}</td>
-                  <td className="px-3 py-2">{v.systolic}</td>
-                  <td className="px-3 py-2">{v.diastolic}</td>
-                  <td className="px-3 py-2">{v.heartRate} bpm</td>
+                  <td className="px-4 py-3">{v.temperature}</td>
+                  <td className="px-4 py-3">{v.systolic}</td>
+                  <td className="px-4 py-3">{v.diastolic}</td>
+                  <td className="px-4 py-3">{v.heartRate} bpm</td>
                 </tr>
               ))}
             </tbody>

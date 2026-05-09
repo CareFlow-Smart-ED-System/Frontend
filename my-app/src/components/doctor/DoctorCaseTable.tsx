@@ -14,39 +14,39 @@ export function DoctorCaseTable({ cases }: Props) {
 
   if (cases.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-400">
+      <div className="text-center py-12 text-gray-900">
         No cases assigned to you
       </div>
     )
   }
 
   return (
-    <table className="w-full text-sm border rounded-lg overflow-hidden">
+    <table className="w-full text-sm">
       <thead>
-        <tr className="bg-gray-100">
-          <th className="text-left px-3 py-2">Patient</th>
-          <th className="text-left px-3 py-2">Severity</th>
-          <th className="text-left px-3 py-2">Priority</th>
-          <th className="text-left px-3 py-2">Status</th>
-          <th className="text-left px-3 py-2">Arrival</th>
+        <tr className="bg-[#f5f7f8] text-gray-600">
+          <th className="text-left px-4 py-3 font-medium">Patient</th>
+          <th className="text-left px-4 py-3 font-medium">Severity</th>
+          <th className="text-left px-4 py-3 font-medium">Priority</th>
+          <th className="text-left px-4 py-3 font-medium">Status</th>
+          <th className="text-left px-4 py-3 font-medium">Arrival</th>
         </tr>
       </thead>
       <tbody>
         {cases.map((c) => (
           <tr
             key={c.caseId}
-            className="border-b hover:bg-gray-50 cursor-pointer"
+            className="border-b border-gray-100 hover:bg-[#f5f7f8] cursor-pointer text-gray-900"
             onClick={() => router.push(`/cases/${c.caseId}`)}
           >
-            <td className="px-3 py-2 font-medium">{c.patientName}</td>
-            <td className="px-3 py-2">
+            <td className="px-4 py-3 font-medium">{c.patientName}</td>
+            <td className="px-4 py-3">
               <TriageBadge severity={c.severity} />
             </td>
-            <td className="px-3 py-2 text-gray-500">#{c.priorityScore}</td>
-            <td className="px-3 py-2">
+            <td className="px-4 py-3">#{c.priorityScore}</td>
+            <td className="px-4 py-3">
               <CaseStatusBadge status={c.status} />
             </td>
-            <td className="px-3 py-2 text-gray-500">
+            <td className="px-4 py-3">
               {new Date(c.arrivalTime).toLocaleTimeString([], {
                 hour: '2-digit',
                 minute: '2-digit',

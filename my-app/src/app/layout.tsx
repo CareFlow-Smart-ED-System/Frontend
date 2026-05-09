@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { LogoNavbar } from "@/components/layout/LogoNavbar";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -33,7 +34,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <LogoNavbar />
+          <main className="flex-1">{children}</main>
+        </QueryProvider>
       </body>
     </html>
   );

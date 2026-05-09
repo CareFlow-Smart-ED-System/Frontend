@@ -26,19 +26,19 @@ export function TriageTab({ caseId, userRole }: Props) {
 
       {/* Current triage snapshot — all roles */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-700 mb-3">Current Triage</h3>
+        <h3 className="text-sm font-semibold text-gray-900 mb-3">Current Triage</h3>
 
-        {loadingCurrent && <p className="text-sm text-gray-400">Loading...</p>}
+        {loadingCurrent && <p className="text-sm text-gray-700">Loading...</p>}
 
         {!loadingCurrent && !current && (
-          <p className="text-sm text-gray-400">No triage recorded yet for this case.</p>
+          <p className="text-sm text-gray-700">No triage recorded yet for this case.</p>
         )}
 
         {current && (
-          <div className="bg-white border rounded-lg p-4 space-y-3">
+          <div className="bg-white border border-gray-100 rounded-2xl p-5 space-y-3">
             <div className="flex items-center gap-3">
               <TriageBadge severity={current.severity} />
-              <span className="text-xs text-gray-400">
+              <span className="text-xs text-gray-700">
                 {new Date(current.triageTime).toLocaleString()}
               </span>
             </div>
@@ -55,26 +55,26 @@ export function TriageTab({ caseId, userRole }: Props) {
 
       {/* Triage history — all roles */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-700 mb-3">
+        <h3 className="text-sm font-semibold text-gray-900 mb-3">
           Triage History
           {history && (
-            <span className="ml-2 text-xs font-normal text-gray-400">
+            <span className="ml-2 text-xs font-normal text-gray-700">
               ({history.total} record{history.total !== 1 ? 's' : ''})
             </span>
           )}
         </h3>
 
-        {loadingHistory && <p className="text-sm text-gray-400">Loading history...</p>}
+        {loadingHistory && <p className="text-sm text-gray-700">Loading history...</p>}
 
         {!loadingHistory && !history?.data.length && (
-          <p className="text-sm text-gray-400">No triage history available.</p>
+          <p className="text-sm text-gray-700">No triage history available.</p>
         )}
 
         <div className="space-y-3">
           {history?.data.map((record: TriageHistoryRecord, index: number) => (
             <div
               key={record.triageId}
-              className="border rounded-lg p-4 bg-white"
+              className="border border-gray-100 rounded-2xl p-5 bg-white"
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
@@ -85,7 +85,7 @@ export function TriageTab({ caseId, userRole }: Props) {
                     </span>
                   )}
                 </div>
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-gray-700">
                   {new Date(record.triageTime).toLocaleString()}
                 </span>
               </div>
@@ -117,9 +117,9 @@ function VitalCard({
   small?: boolean
 }) {
   return (
-    <div className="bg-gray-50 rounded p-2">
-      <p className={`text-gray-400 ${small ? 'text-xs' : 'text-xs'}`}>{label}</p>
-      <p className={`font-medium ${small ? 'text-sm' : 'text-base'}`}>{value}</p>
+    <div className="bg-[#f5f7f8] rounded-xl p-3">
+      <p className={`text-gray-700 ${small ? 'text-xs' : 'text-xs'}`}>{label}</p>
+      <p className={`font-medium text-gray-900 ${small ? 'text-sm' : 'text-base'}`}>{value}</p>
     </div>
   )
 }
@@ -182,7 +182,7 @@ function TriageForm({ caseId }: { caseId: string }) {
 
       {/* Severity */}
       <div>
-        <label className="block text-xs text-gray-500 mb-1">Severity</label>
+        <label className="block text-xs text-gray-700 mb-1">Severity</label>
         <select
           name="severity"
           value={form.severity}
@@ -206,7 +206,7 @@ function TriageForm({ caseId }: { caseId: string }) {
           { name: 'respiratoryRate', label: 'Respiratory Rate',  placeholder: '24' },
         ].map((field) => (
           <div key={field.name}>
-            <label className="block text-xs text-gray-500 mb-1">{field.label}</label>
+            <label className="block text-xs text-gray-700 mb-1">{field.label}</label>
             <input
               type="number"
               name={field.name}
