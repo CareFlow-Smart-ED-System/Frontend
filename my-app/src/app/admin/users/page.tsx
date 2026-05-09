@@ -5,6 +5,7 @@ import { useAdminUsers } from "@/hooks/useAdmin"
 import { StaffRole } from "@/types/admin"
 import { StaffUserForm } from "@/components/admin/StaffUserForm"
 import { StaffUsersTable } from "@/components/admin/StaffUsersTable"
+import Link from "next/link"
 
 // ─────────────────────────────────────────────────────────────
 // Admin Users Page
@@ -48,6 +49,16 @@ export default function AdminUsersPage() {
                     <p className="text-sm md:text-base text-gray-500">
                         Create, review, update, reset passwords, and remove staff accounts.
                     </p>
+
+                    <div className="mt-4">
+                        <Link
+                            href="/admin/audit-logs"
+                            className="inline-flex bg-gray-900 text-white px-4 py-2 rounded-full text-sm hover:bg-black"
+                        >
+                            View Audit Logs
+                        </Link>
+                    </div>
+
                 </div>
 
                 {/* Create staff user form */}

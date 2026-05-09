@@ -43,6 +43,10 @@ export function LogoNavbar() {
             Admin
           </Link>
 
+          <Link href="/admin/audit-logs" className="text-gray-600 hover:text-gray-900">
+            Audit Logs
+          </Link>
+
           <NotificationBell />
         </div>
       </div>
