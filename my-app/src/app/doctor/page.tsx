@@ -4,6 +4,17 @@ import { useDoctorCases } from '@/hooks/useDoctors'
 import { DoctorCaseTable } from '@/components/doctor/DoctorCaseTable'
 import { useAuthStore } from '@/store/authStore' // auth store
 
+// ─────────────────────────────────────────────────────────────
+// Doctor Dashboard Page
+//
+// Purpose:
+// - Shows the logged-in doctor's assigned cases.
+// - Provides quick access to each case workspace.
+//
+// Endpoints used through hooks:
+// GET /api/v1/doctors/me/cases
+// ─────────────────────────────────────────────────────────────
+
 export default function DoctorDashboard() {
   const { user } = useAuthStore()
   const { data, isLoading, isError } = useDoctorCases(user?.userId ?? '')

@@ -1,6 +1,17 @@
 import Link from "next/link";
 import Image from "next/image";
 
+// ─────────────────────────────────────────────────────────────
+// Landing Page
+//
+// Purpose:
+// - Marketing and navigation entry point.
+// - Links to the main CareFlow modules.
+//
+// Endpoints used:
+// - None (static content)
+// ─────────────────────────────────────────────────────────────
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#eef2f3] font-sans">

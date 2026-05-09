@@ -19,6 +19,40 @@ import { useMedications } from "@/hooks/useDoctors";
 import { TriageTab } from "@/components/triage/TriageTab";
 import { MedicalRecordsTab } from "@/components/patients/MedicalRecordsTab";
 
+// ─────────────────────────────────────────────────────────────
+// Case Details Page
+//
+// Purpose:
+// - Full case workspace for clinical/admin roles.
+// - Aggregates timeline, triage, vitals, notes, labs, imaging,
+//   prescriptions, medications, medical records, and summary.
+// - Allows role-based updates (triage, vitals, notes, status, meds).
+//
+// Endpoints used through hooks/components:
+// GET   /api/v1/cases/{caseId}
+// GET   /api/v1/cases/{caseId}/timeline
+// GET   /api/v1/cases/{caseId}/summary
+// GET   /api/v1/cases/{caseId}/medications
+// PATCH /api/v1/cases/{caseId}/status
+// GET   /api/v1/cases/{caseId}/triage
+// GET   /api/v1/cases/{caseId}/triage/history
+// POST  /api/v1/cases/{caseId}/triage
+// GET   /api/v1/cases/{caseId}/vital-signs
+// POST  /api/v1/cases/{caseId}/vital-signs
+// GET   /api/v1/cases/{caseId}/notes
+// POST  /api/v1/cases/{caseId}/notes
+// GET   /api/v1/cases/{caseId}/medical-records
+// POST  /api/v1/cases/{caseId}/medical-records
+// POST  /api/v1/cases/{caseId}/medications/administrations
+// GET   /api/v1/doctors/cases/{caseId}/lab-results
+// GET   /api/v1/doctors/cases/{caseId}/imaging-reports
+// POST  /api/v1/doctors/cases/{caseId}/medications
+//
+// Notes:
+// - Summary is fetched only when the case is completed.
+// - Medications list endpoint is pending backend support.
+// ─────────────────────────────────────────────────────────────
+
 type Tab =
   | "overview"
   | "timeline"

@@ -3,6 +3,17 @@
 import { useCases } from '@/hooks/useCases'
 import { CaseTable } from '@/components/cases/CaseTable'
 
+// ─────────────────────────────────────────────────────────────
+// Cases Dashboard Page
+//
+// Purpose:
+// - Lists active cases for staff overview.
+// - Opens a case workspace from the table.
+//
+// Endpoints used through hooks:
+// GET /api/v1/cases
+// ─────────────────────────────────────────────────────────────
+
 export default function CasesPage() {
   const { data, isLoading, isError } = useCases()
 

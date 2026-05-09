@@ -6,6 +6,19 @@ import { CaseStatusBadge } from '@/components/cases/CaseStatusBadge'
 import { useQueue, useQueueStats } from '@/hooks/useQueue'
 import { QueueEntry } from '@/types/queue'
 
+// ─────────────────────────────────────────────────────────────
+// Queue Dashboard Page
+//
+// Purpose:
+// - Shows the real-time emergency queue.
+// - Displays aggregate queue stats.
+// - Lets staff open a case from the queue list.
+//
+// Endpoints used through hooks:
+// GET /api/v1/queue
+// GET /api/v1/queue/stats
+// ─────────────────────────────────────────────────────────────
+
 function StatCard({
   label,
   value,
