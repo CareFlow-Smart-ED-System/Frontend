@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { useCase, useCaseTimeline, useCaseSummary } from "@/hooks/useCases";
 import { TriageBadge } from "@/components/triage/TriageBadge";
@@ -31,20 +31,114 @@ type Tab =
   | "prescriptions"
   | "summary";
 
+type Role = "DOCTOR" | "NURSE" | "ADMIN" | "RECEPTIONIST" | "PATIENT";
+
 export default function CaseDetailPage() {
   const { caseId } = useParams<{ caseId: string }>();
   const [activeTab, setActiveTab] = useState<Tab>("overview");
 
   const { user } = useAuthStore();
-  const role = user?.role as "DOCTOR" | "NURSE";
+  const role = user?.role as Role | undefined;
+
+  const isDoctor = role === "DOCTOR";
+  const isNurse = role === "NURSE";
+  const isAdmin = role === "ADMIN";
+  const isReceptionist = role === "RECEPTIONIST";
+  const isPatient = role === "PATIENT";
+
+  const isClinicalRole = isDoctor || isNurse;
+  const canViewTriage = isDoctor || isNurse || isAdmin;
+  const canUseCasePage = isDoctor || isNurse || isAdmin || isReceptionist;
 
   const { data: caseData, isLoading, isError } = useCase(caseId);
   const { data: timeline } = useCaseTimeline(caseId);
+
   const { data: summary } = useCaseSummary(
     caseId,
     caseData?.status === "COMPLETED",
   );
+
   const { data: medications } = useMedications(caseId);
+
+  // ─────────────────────────────────────────────────────────────
+  // Role-based tabs
+  //
+  //
+  // DOCTOR:
+  // - Can view clinical data.
+  // - Can prescribe medication.
+  // - Can complete the case.
+  //
+  // NURSE:
+  // - Can perform triage.
+  // - Can record vitals/notes.
+  // - Can administer prescribed medication.
+  //
+  // ADMIN:
+  // - Can view high-level case info, timeline, triage, and summary.
+  //
+  // RECEPTIONIST:
+  // - Should not see clinical tabs.
+  // - Can view basic case progress only.
+  //
+  // PATIENT:
+  // - Should not access this internal staff case page.
+  // ─────────────────────────────────────────────────────────────
+  const tabs: { key: Tab; label: string }[] = useMemo(() => {
+    const allowedTabs: { key: Tab; label: string }[] = [];
+
+    if (canUseCasePage) {
+      allowedTabs.push({ key: "overview", label: "Overview" });
+      allowedTabs.push({ key: "timeline", label: "Timeline" });
+    }
+
+    if (isNurse) {
+      allowedTabs.push({ key: "vitals", label: "Vital Signs" });
+      allowedTabs.push({ key: "notes", label: "Clinical Notes" });
+    }
+
+    if (isClinicalRole) {
+      allowedTabs.push({ key: "medicalRecords", label: "Medical Records" });
+    }
+
+    if (isDoctor) {
+      allowedTabs.push({ key: "labs", label: "Lab Results" });
+      allowedTabs.push({ key: "imaging", label: "Imaging" });
+    }
+
+    if (isClinicalRole) {
+      allowedTabs.push({ key: "prescriptions", label: "Prescriptions" });
+    }
+
+    if (canViewTriage) {
+      allowedTabs.push({ key: "triage", label: "Triage" });
+    }
+
+    if (caseData?.status === "COMPLETED" && canUseCasePage) {
+      allowedTabs.push({ key: "summary", label: "Discharge Summary" });
+    }
+
+    return allowedTabs;
+  }, [
+    canUseCasePage,
+    isNurse,
+    isClinicalRole,
+    isDoctor,
+    canViewTriage,
+    caseData?.status,
+  ]);
+
+  // If the user role changes, or if the current active tab is no longer
+  // allowed for this role, move them back to the first allowed tab.
+  useEffect(() => {
+    if (tabs.length === 0) return;
+
+    const activeTabIsAllowed = tabs.some((tab) => tab.key === activeTab);
+
+    if (!activeTabIsAllowed) {
+      setActiveTab(tabs[0].key);
+    }
+  }, [activeTab, tabs]);
 
   if (isLoading)
     return (
@@ -54,6 +148,7 @@ export default function CaseDetailPage() {
         </div>
       </div>
     );
+
   if (isError || !caseData)
     return (
       <div className="min-h-screen bg-[#eef2f3]">
@@ -63,20 +158,24 @@ export default function CaseDetailPage() {
       </div>
     );
 
-  const tabs: { key: Tab; label: string }[] = [
-    { key: "overview", label: "Overview" },
-    { key: "timeline", label: "Timeline" },
-    { key: "vitals", label: "Vital Signs" },
-    { key: "notes", label: "Clinical Notes" },
-    { key: "medicalRecords", label: "Medical Records" },
-    { key: "labs", label: "Lab Results" },
-    { key: "imaging", label: "Imaging" },
-    { key: "prescriptions", label: "Prescriptions" },
-    { key: "triage", label: "Triage" },
-    ...(caseData.status === "COMPLETED"
-      ? [{ key: "summary" as Tab, label: "Discharge Summary" }]
-      : []),
-  ];
+  if (!role || isPatient || tabs.length === 0) {
+    return (
+      <div className="min-h-screen bg-[#eef2f3]">
+        <div className="max-w-6xl mx-auto px-6 py-10">
+          <div className="bg-white border border-gray-100 rounded-2xl p-6">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              Access Restricted
+            </h1>
+
+            <p className="text-sm text-gray-600">
+              This case workspace is only available to authorized hospital
+              staff.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#eef2f3]">
@@ -86,25 +185,29 @@ export default function CaseDetailPage() {
           <div className="inline-block border border-gray-300 bg-white/60 backdrop-blur-sm text-gray-600 text-xs px-4 py-1.5 rounded-full mb-4">
             Live case details and care history
           </div>
+
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
                 {caseData.patientName}
               </h1>
+
               <p className="text-sm text-gray-500 mt-1">
                 Arrived {new Date(caseData.arrivalTime).toLocaleString()}
               </p>
             </div>
+
             <div className="flex items-center gap-3">
               {caseData.triage && (
                 <TriageBadge severity={caseData.triage.severity} />
               )}
+
               <CaseStatusBadge status={caseData.status} />
             </div>
           </div>
         </div>
 
-        {/* Tabs */}
+        {/* Role-based tabs */}
         <div className="flex gap-2 flex-wrap bg-white border border-gray-100 rounded-2xl p-2 mb-6">
           {tabs.map((tab) => (
             <button
@@ -120,21 +223,24 @@ export default function CaseDetailPage() {
           ))}
         </div>
 
-        {/* Tab content */}
+        {/* Overview tab */}
         {activeTab === "overview" && (
           <div className="space-y-4">
             <div className="bg-white border border-gray-100 rounded-2xl p-5">
               <p className="text-xs text-gray-500 uppercase tracking-wide mb-3">
                 Assigned Doctor
               </p>
+
               {caseData.assignedDoctor ? (
                 <div>
                   <p className="font-medium text-gray-900">
                     {caseData.assignedDoctor.name}
                   </p>
+
                   <p className="text-sm text-gray-500">
                     {caseData.assignedDoctor.specialization}
                   </p>
+
                   <p className="text-xs text-gray-400 mt-1">
                     {caseData.assignedDoctor.role}
                   </p>
@@ -146,42 +252,53 @@ export default function CaseDetailPage() {
               )}
             </div>
 
-            <UpdateStatusButton
-              caseId={caseId}
-              currentStatus={caseData.status}
-              userRole={role}
-            />
+            {/* Only doctors and nurses update case status.
+                Nurse: WAITING → UNDER_TREATMENT
+                Doctor: UNDER_TREATMENT → COMPLETED */}
+            {isClinicalRole && (
+              <UpdateStatusButton
+                caseId={caseId}
+                currentStatus={caseData.status}
+                userRole={role}
+              />
+            )}
           </div>
         )}
 
+        {/* Timeline tab */}
         {activeTab === "timeline" && (
           <CaseTimeline entries={timeline?.data ?? []} />
         )}
 
-        {activeTab === "vitals" && (
+        {/* Nurse-only vitals tab */}
+        {activeTab === "vitals" && isNurse && (
           <VitalSignsTab caseId={caseId} userRole={role} />
         )}
 
-        {activeTab === "notes" && (
+        {/* Nurse-only clinical notes tab */}
+        {activeTab === "notes" && isNurse && (
           <ClinicalNotesTab caseId={caseId} userRole={role} />
         )}
 
-        {activeTab === "medicalRecords" && (
-          <MedicalRecordsTab caseId={caseId} userRole={role as "DOCTOR" | "NURSE"} />
+        {/* Doctor and Nurse medical records tab */}
+        {activeTab === "medicalRecords" && isClinicalRole && (
+          <MedicalRecordsTab caseId={caseId} userRole={role} />
         )}
 
-        {activeTab === "labs" && <LabResultsTab caseId={caseId} />}
+        {/* Doctor-only lab results tab */}
+        {activeTab === "labs" && isDoctor && <LabResultsTab caseId={caseId} />}
 
-        {activeTab === "imaging" && <ImagingTab caseId={caseId} />}
+        {/* Doctor-only imaging tab */}
+        {activeTab === "imaging" && isDoctor && <ImagingTab caseId={caseId} />}
 
-        {/* Prescriptions tab: doctor sees form, nurse sees administer buttons */}
-        {activeTab === "prescriptions" && (
+        {/* Doctor/Nurse prescriptions tab */}
+        {activeTab === "prescriptions" && isClinicalRole && (
           <div className="space-y-6">
-            {/* Existing medications list — visible to both roles */}
             <div>
               <h3 className="text-sm font-semibold text-gray-700 mb-3">
                 Prescribed Medications
               </h3>
+
               {!medications?.data.length ? (
                 <p className="text-sm text-gray-400">
                   No medications prescribed yet.
@@ -197,10 +314,12 @@ export default function CaseDetailPage() {
                         <p className="font-medium text-sm text-gray-900">
                           {med.name}
                         </p>
+
                         <p className="text-xs text-gray-500">{med.dosage}</p>
                       </div>
-                      {/*  only nurses see the administer button */}
-                      {role === "NURSE" && (
+
+                      {/* Nurses administer medication. */}
+                      {isNurse && (
                         <AdministerMedicationButton
                           caseId={caseId}
                           medicationId={med.id}
@@ -212,18 +331,17 @@ export default function CaseDetailPage() {
               )}
             </div>
 
-            {/* Only doctors see the prescription form */}
-            {role === "DOCTOR" && <PrescriptionForm caseId={caseId} />}
+            {/* Doctors prescribe medication. */}
+            {isDoctor && <PrescriptionForm caseId={caseId} />}
           </div>
         )}
 
-        {activeTab === "triage" && (
-          <TriageTab
-            caseId={caseId}
-            userRole={role as "DOCTOR" | "NURSE" | "ADMIN"}
-          />
+        {/* Doctor/Nurse/Admin triage tab */}
+        {activeTab === "triage" && canViewTriage && (
+          <TriageTab caseId={caseId} userRole={role} />
         )}
 
+        {/* Completed-case summary */}
         {activeTab === "summary" && summary && (
           <DischargeSummaryCard summary={summary} />
         )}
