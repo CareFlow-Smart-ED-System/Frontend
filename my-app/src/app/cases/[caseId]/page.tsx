@@ -17,6 +17,7 @@ import { AdministerMedicationButton } from "@/components/nurse/AdministerMedicat
 import { useAuthStore } from "@/store/authStore";
 import { useMedications } from "@/hooks/useDoctors";
 import { TriageTab } from "@/components/triage/TriageTab";
+import { MedicalRecordsTab } from "@/components/patients/MedicalRecordsTab";
 
 type Tab =
   | "overview"
@@ -24,6 +25,7 @@ type Tab =
   | "triage"
   | "vitals"
   | "notes"
+  | "medicalRecords"
   | "labs"
   | "imaging"
   | "prescriptions"
@@ -66,6 +68,7 @@ export default function CaseDetailPage() {
     { key: "timeline", label: "Timeline" },
     { key: "vitals", label: "Vital Signs" },
     { key: "notes", label: "Clinical Notes" },
+    { key: "medicalRecords", label: "Medical Records" },
     { key: "labs", label: "Lab Results" },
     { key: "imaging", label: "Imaging" },
     { key: "prescriptions", label: "Prescriptions" },
@@ -107,18 +110,17 @@ export default function CaseDetailPage() {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
-                activeTab === tab.key
+              className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${activeTab === tab.key
                   ? "bg-red-700 text-white"
                   : "text-gray-600 hover:bg-[#f5f7f8]"
-              }`}
+                }`}
             >
               {tab.label}
             </button>
           ))}
         </div>
 
-      {/* Tab content */}
+        {/* Tab content */}
         {activeTab === "overview" && (
           <div className="space-y-4">
             <div className="bg-white border border-gray-100 rounded-2xl p-5">
@@ -152,23 +154,27 @@ export default function CaseDetailPage() {
           </div>
         )}
 
-      {activeTab === "timeline" && (
-        <CaseTimeline entries={timeline?.data ?? []} />
-      )}
+        {activeTab === "timeline" && (
+          <CaseTimeline entries={timeline?.data ?? []} />
+        )}
 
-      {activeTab === "vitals" && (
-        <VitalSignsTab caseId={caseId} userRole={role} />
-      )}
+        {activeTab === "vitals" && (
+          <VitalSignsTab caseId={caseId} userRole={role} />
+        )}
 
-      {activeTab === "notes" && (
-        <ClinicalNotesTab caseId={caseId} userRole={role} />
-      )}
+        {activeTab === "notes" && (
+          <ClinicalNotesTab caseId={caseId} userRole={role} />
+        )}
 
-      {activeTab === "labs" && <LabResultsTab caseId={caseId} />}
+        {activeTab === "medicalRecords" && (
+          <MedicalRecordsTab caseId={caseId} userRole={role as "DOCTOR" | "NURSE"} />
+        )}
 
-      {activeTab === "imaging" && <ImagingTab caseId={caseId} />}
+        {activeTab === "labs" && <LabResultsTab caseId={caseId} />}
 
-      {/* Prescriptions tab: doctor sees form, nurse sees administer buttons */}
+        {activeTab === "imaging" && <ImagingTab caseId={caseId} />}
+
+        {/* Prescriptions tab: doctor sees form, nurse sees administer buttons */}
         {activeTab === "prescriptions" && (
           <div className="space-y-6">
             {/* Existing medications list — visible to both roles */}
@@ -211,12 +217,12 @@ export default function CaseDetailPage() {
           </div>
         )}
 
-      {activeTab === "triage" && (
-        <TriageTab
-          caseId={caseId}
-          userRole={role as "DOCTOR" | "NURSE" | "ADMIN"}
-        />
-      )}
+        {activeTab === "triage" && (
+          <TriageTab
+            caseId={caseId}
+            userRole={role as "DOCTOR" | "NURSE" | "ADMIN"}
+          />
+        )}
 
         {activeTab === "summary" && summary && (
           <DischargeSummaryCard summary={summary} />
