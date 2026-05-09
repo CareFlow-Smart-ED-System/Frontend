@@ -270,7 +270,7 @@ function EditPatientForm({
                 </h2>
 
                 <p className="text-xs text-gray-500 mt-1">
-                    Use this after quick registration to complete or correct the patient's
+                    Use this after quick registration to complete or correct the patient&apos;s
                     profile information.
                 </p>
             </div>

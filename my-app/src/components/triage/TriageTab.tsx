@@ -177,7 +177,7 @@ function TriageForm({ caseId }: { caseId: string }) {
     >
       <h3 className="text-sm font-semibold text-red-800">Record New Triage Assessment</h3>
       <p className="text-xs text-red-600">
-        Each submission creates a permanent record. Only submit if the patient's condition has changed.
+        Each submission creates a permanent record. Only submit if the patient&apos;s condition has changed.
       </p>
 
       {/* Severity */}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { useCase, useCaseTimeline, useCaseSummary } from "@/hooks/useCases";
 import { TriageBadge } from "@/components/triage/TriageBadge";
@@ -62,7 +62,6 @@ export default function CaseDetailPage() {
 
   // ─────────────────────────────────────────────────────────────
   // Role-based tabs
-  //
   //
   // DOCTOR:
   // - Can view clinical data.
@@ -128,17 +127,10 @@ export default function CaseDetailPage() {
     caseData?.status,
   ]);
 
-  // If the user role changes, or if the current active tab is no longer
-  // allowed for this role, move them back to the first allowed tab.
-  useEffect(() => {
-    if (tabs.length === 0) return;
-
-    const activeTabIsAllowed = tabs.some((tab) => tab.key === activeTab);
-
-    if (!activeTabIsAllowed) {
-      setActiveTab(tabs[0].key);
-    }
-  }, [activeTab, tabs]);
+  // Instead of calling setState inside useEffect, we derive the visible tab.
+  // If activeTab is no longer allowed for this role, we display the first allowed tab.
+  const activeTabIsAllowed = tabs.some((tab) => tab.key === activeTab);
+  const visibleActiveTab = activeTabIsAllowed ? activeTab : tabs[0]?.key;
 
   if (isLoading)
     return (
@@ -213,7 +205,7 @@ export default function CaseDetailPage() {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${activeTab === tab.key
+              className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${visibleActiveTab === tab.key
                 ? "bg-red-700 text-white"
                 : "text-gray-600 hover:bg-[#f5f7f8]"
                 }`}
@@ -224,7 +216,7 @@ export default function CaseDetailPage() {
         </div>
 
         {/* Overview tab */}
-        {activeTab === "overview" && (
+        {visibleActiveTab === "overview" && (
           <div className="space-y-4">
             <div className="bg-white border border-gray-100 rounded-2xl p-5">
               <p className="text-xs text-gray-500 uppercase tracking-wide mb-3">
@@ -266,33 +258,37 @@ export default function CaseDetailPage() {
         )}
 
         {/* Timeline tab */}
-        {activeTab === "timeline" && (
+        {visibleActiveTab === "timeline" && (
           <CaseTimeline entries={timeline?.data ?? []} />
         )}
 
         {/* Nurse-only vitals tab */}
-        {activeTab === "vitals" && isNurse && (
+        {visibleActiveTab === "vitals" && isNurse && (
           <VitalSignsTab caseId={caseId} userRole={role} />
         )}
 
         {/* Nurse-only clinical notes tab */}
-        {activeTab === "notes" && isNurse && (
+        {visibleActiveTab === "notes" && isNurse && (
           <ClinicalNotesTab caseId={caseId} userRole={role} />
         )}
 
         {/* Doctor and Nurse medical records tab */}
-        {activeTab === "medicalRecords" && isClinicalRole && (
+        {visibleActiveTab === "medicalRecords" && isClinicalRole && (
           <MedicalRecordsTab caseId={caseId} userRole={role} />
         )}
 
         {/* Doctor-only lab results tab */}
-        {activeTab === "labs" && isDoctor && <LabResultsTab caseId={caseId} />}
+        {visibleActiveTab === "labs" && isDoctor && (
+          <LabResultsTab caseId={caseId} />
+        )}
 
         {/* Doctor-only imaging tab */}
-        {activeTab === "imaging" && isDoctor && <ImagingTab caseId={caseId} />}
+        {visibleActiveTab === "imaging" && isDoctor && (
+          <ImagingTab caseId={caseId} />
+        )}
 
         {/* Doctor/Nurse prescriptions tab */}
-        {activeTab === "prescriptions" && isClinicalRole && (
+        {visibleActiveTab === "prescriptions" && isClinicalRole && (
           <div className="space-y-6">
             <div>
               <h3 className="text-sm font-semibold text-gray-700 mb-3">
@@ -337,12 +333,12 @@ export default function CaseDetailPage() {
         )}
 
         {/* Doctor/Nurse/Admin triage tab */}
-        {activeTab === "triage" && canViewTriage && (
+        {visibleActiveTab === "triage" && canViewTriage && (
           <TriageTab caseId={caseId} userRole={role} />
         )}
 
         {/* Completed-case summary */}
-        {activeTab === "summary" && summary && (
+        {visibleActiveTab === "summary" && summary && (
           <DischargeSummaryCard summary={summary} />
         )}
       </div>
