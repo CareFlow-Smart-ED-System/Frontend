@@ -3,7 +3,7 @@ import { create } from 'zustand'
 interface User {
   userId: string
   displayName: string
-  role: 'DOCTOR' | 'NURSE' | 'ADMIN'
+  role: 'DOCTOR' | 'NURSE' | 'ADMIN' | 'RECEPTIONIST' | 'PATIENT'
   email: string
 }
 
@@ -17,10 +17,10 @@ interface AuthStore {
 export const useAuthStore = create<AuthStore>((set) => ({
   // ── Hardcoded mock user — swap role here to test different views ──
   user: {
-    userId: 'mock-doctor-001',
-    displayName: 'Dr. Sara Ahmed',
-    role: 'DOCTOR',       // change to 'NURSE' or 'ADMIN' to test other roles
-    email: 'sara@careflow.com',
+    userId: 'mock-admin-001',
+    displayName: 'Admin Mona',
+    role: 'ADMIN',
+    email: 'admin@careflow.com',
   },
   accessToken: 'mock-token',
   // ─────────────────────────────────────────────────────────────────
