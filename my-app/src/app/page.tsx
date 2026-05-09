@@ -12,7 +12,7 @@ export default function LandingPage() {
             alt="CareFlow ED"
             width={120}
             height={32}
-            className="h-8 w-auto"
+            className="h-8"
           />
         </div>
 
@@ -199,7 +199,7 @@ export default function LandingPage() {
           <h2 className="text-3xl font-bold text-white mb-4">
             Ready to streamline your ED?
           </h2>
-          <p className="text-blue-200 text-sm mb-8 leading-relaxed">
+          <p className="text-white text-sm mb-8 leading-relaxed">
             Start managing patients, queues, and clinical data from one system.
           </p>
           <Link

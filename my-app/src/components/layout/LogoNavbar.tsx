@@ -21,12 +21,15 @@ export function LogoNavbar() {
             alt="CareFlow ED"
             width={120}
             height={32}
-            className="h-8 w-auto"
+            className="h-8"
             priority
           />
         </Link>
 
         <div className="flex items-center gap-4 text-sm">
+          <Link href="/" className="text-gray-600 hover:text-gray-900">
+            Home
+          </Link>
           <Link href="/queue" className="text-gray-600 hover:text-gray-900">
             Queue
           </Link>
