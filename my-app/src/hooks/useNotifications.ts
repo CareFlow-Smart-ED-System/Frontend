@@ -35,7 +35,8 @@ export function useNotifications(filters?: { isRead?: boolean }) {
                         message: 'New lab results available for patient John Doe',
                         type: 'LAB_RESULT',
                         isRead: false,
-                        createdAt: '2026-05-09',
+                        readAt: null,
+                        createdAt: '2026-05-09T10:00:00.000Z',
                     },
                     {
                         id: 'notif-002',
@@ -43,7 +44,8 @@ export function useNotifications(filters?: { isRead?: boolean }) {
                         message: 'Patient Layla Hassan assigned to you',
                         type: 'DOCTOR_ASSIGNED',
                         isRead: true,
-                        createdAt: '2026-05-09',
+                        readAt: '2026-05-09T10:30:00.000Z',
+                        createdAt: '2026-05-09T10:15:00.000Z',
                     },
                     {
                         id: 'notif-003',
@@ -51,7 +53,8 @@ export function useNotifications(filters?: { isRead?: boolean }) {
                         message: 'CRITICAL PATIENT ARRIVED: Omar Khalil',
                         type: 'CRITICAL_ALERT',
                         isRead: false,
-                        createdAt: '2026-05-09',
+                        readAt: null,
+                        createdAt: '2026-05-09T11:00:00.000Z',
                     },
                 ]
 

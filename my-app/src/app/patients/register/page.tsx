@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 import { useQuickRegisterPatient } from "@/hooks/usePatients"
 import { Gender } from "@/types/patients"
 
@@ -29,8 +28,6 @@ export default function QuickRegisterPatientPage() {
         phone: "",
     })
 
-    const [createdPatientId, setCreatedPatientId] = useState<string | null>(null)
-    const [createdPatientName, setCreatedPatientName] = useState<string | null>(null)
 
     const {
         mutate,
@@ -49,8 +46,6 @@ export default function QuickRegisterPatientPage() {
         }))
 
         reset()
-        setCreatedPatientId(null)
-        setCreatedPatientName(null)
     }
 
     function handleSubmit(e: React.FormEvent) {

@@ -45,7 +45,7 @@ export function useBills() {
                             caseId: 'case-001',
                             patientName: 'John Doe',
                             amount: 1500,
-                            status: 'Pending',
+                            status: 'PENDING',
                             createdAt: '2026-05-09',
                         },
                         {
@@ -53,7 +53,7 @@ export function useBills() {
                             caseId: 'case-002',
                             patientName: 'Layla Hassan',
                             amount: 2200,
-                            status: 'Paid',
+                            status: 'PAID',
                             createdAt: '2026-05-09',
                         },
                         {
@@ -61,7 +61,7 @@ export function useBills() {
                             caseId: 'case-003',
                             patientName: 'Omar Khalil',
                             amount: 1800,
-                            status: 'Sent to Insurance',
+                            status: 'SENT_TO_INSURANCE',
                             createdAt: '2026-05-09',
                         },
                     ],
@@ -89,7 +89,7 @@ export function useCreateBill() {
                     billId: `bill-${Date.now()}`,
                     caseId: payload.caseId,
                     amount: payload.amount,
-                    status: 'Pending',
+                    status: 'PENDING',
                 }
             }
 
@@ -119,7 +119,7 @@ export function useBillDetails(billId: string) {
                     caseId: 'case-001',
                     patientName: 'John Doe',
                     amount: 1500,
-                    status: 'Pending',
+                    status: 'PENDING',
                     createdAt: '2026-05-09',
                 }
             }
@@ -171,10 +171,12 @@ export function useCaseBilling(caseId: string) {
                 await delay()
 
                 return {
-                    caseId,
                     billId: 'bill-001',
+                    caseId,
+                    patientName: 'John Doe',
                     amount: 1500,
-                    status: 'Pending',
+                    status: 'PENDING',
+                    createdAt: '2026-05-09',
                 }
             }
 

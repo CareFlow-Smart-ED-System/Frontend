@@ -1,4 +1,4 @@
-export type BillingStatus = 'Pending' | 'Paid' | 'Sent to Insurance'
+export type BillingStatus = 'PENDING' | 'PAID' | 'SENT_TO_INSURANCE'
 
 export interface Bill {
     billId: string
@@ -50,8 +50,10 @@ export interface UpdateBillStatusResponse {
 }
 
 export interface CaseBilling {
-    caseId: string
     billId: string
+    caseId: string
+    patientName: string
     amount: number
     status: BillingStatus
+    createdAt: string
 }

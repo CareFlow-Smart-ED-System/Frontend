@@ -2,7 +2,9 @@ export type AppointmentStatus = 'SCHEDULED' | 'COMPLETED' | 'CANCELLED'
 
 export interface Appointment {
     appointmentId: string
+    patientId: string
     patientName: string
+    doctorId: string
     doctorName: string
     date: string
     status: AppointmentStatus

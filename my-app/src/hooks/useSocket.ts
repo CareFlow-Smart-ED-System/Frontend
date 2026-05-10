@@ -3,6 +3,14 @@ import { io } from 'socket.io-client'
 import { useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 
+type NotificationSocketPayload = {
+  notificationId?: string
+  caseId?: string
+  message?: string
+  type?: string
+  action?: string
+}
+
 export function useSocket(userId: string) {
   const queryClient = useQueryClient()
   const socketRef = useRef<ReturnType<typeof io> | null>(null)
@@ -20,19 +28,75 @@ export function useSocket(userId: string) {
 
     socket.on('queue.updated', () => {
       queryClient.invalidateQueries({ queryKey: ['queue'] })
-    })
-
-    socket.on('notification.critical_triage', (data) => {
-      toast.error(data.message, { duration: 8000, icon: '🚨' })
-    })
-
-    socket.on('notification.doctor_assigned', () => {
       queryClient.invalidateQueries({ queryKey: ['cases'] })
     })
 
-    socket.on('notification.vitals_abnormal', (data) => {
-      toast(data.message, { icon: '⚠️', duration: 6000 })
-      queryClient.invalidateQueries({ queryKey: ['cases', data.caseId] })
+    socket.on('notification.critical_triage', (data: NotificationSocketPayload) => {
+      toast.error(data.message ?? 'Critical triage alert', {
+        duration: 8000,
+        icon: '🚨',
+      })
+
+      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+      queryClient.invalidateQueries({ queryKey: ['queue'] })
+      queryClient.invalidateQueries({ queryKey: ['cases'] })
+    })
+
+    socket.on('notification.doctor_assigned', (data: NotificationSocketPayload) => {
+      toast(data.message ?? 'Doctor assigned to case', {
+        icon: '👨‍⚕️',
+        duration: 6000,
+      })
+
+      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+      queryClient.invalidateQueries({ queryKey: ['cases'] })
+
+      if (data.caseId) {
+        queryClient.invalidateQueries({ queryKey: ['cases', data.caseId] })
+      }
+    })
+
+    socket.on('notification.vitals_abnormal', (data: NotificationSocketPayload) => {
+      toast(data.message ?? 'Abnormal vitals recorded', {
+        icon: '⚠️',
+        duration: 6000,
+      })
+
+      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+
+      if (data.caseId) {
+        queryClient.invalidateQueries({ queryKey: ['cases', data.caseId] })
+        queryClient.invalidateQueries({ queryKey: ['cases', data.caseId, 'vital-signs'] })
+      }
+    })
+
+    socket.on('notification.new_prescription', (data: NotificationSocketPayload) => {
+      toast(data.message ?? 'New prescription added', {
+        icon: '💊',
+        duration: 6000,
+      })
+
+      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+
+      if (data.caseId) {
+        queryClient.invalidateQueries({ queryKey: ['cases', data.caseId, 'medications'] })
+        queryClient.invalidateQueries({ queryKey: ['cases', data.caseId, 'timeline'] })
+      }
+    })
+
+    socket.on('notification.lab_ready', (data: NotificationSocketPayload) => {
+      toast(data.message ?? 'New lab or imaging result available', {
+        icon: '🧪',
+        duration: 6000,
+      })
+
+      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+
+      if (data.caseId) {
+        queryClient.invalidateQueries({ queryKey: ['cases', data.caseId, 'lab-results'] })
+        queryClient.invalidateQueries({ queryKey: ['cases', data.caseId, 'imaging'] })
+        queryClient.invalidateQueries({ queryKey: ['cases', data.caseId, 'timeline'] })
+      }
     })
 
     return () => {

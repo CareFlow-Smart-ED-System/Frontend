@@ -26,10 +26,10 @@ export default function BillDetailsPage() {
     const updateStatusMutation = useUpdateBillStatus(billId)
 
     const [selectedStatus, setSelectedStatus] =
-        useState<BillingStatus>("Pending")
+        useState<BillingStatus>("PENDING")
 
     // Keep selected status aligned with loaded bill data.
-    // This avoids showing "Pending" forever if the bill is already Paid.
+    // This avoids showing "PENDING" forever if the bill is already PAID.
     if (bill && selectedStatus !== bill.status && !updateStatusMutation.isPending) {
         setSelectedStatus(bill.status)
     }

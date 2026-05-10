@@ -31,12 +31,12 @@ export function useQuickRegisterPatient() {
         return {
           message: "Patient registered successfully",
           patientId: `patient-${Date.now()}`,
+          firstName: payload.firstName,
+          lastName: payload.lastName,
           displayName: `${payload.firstName} ${payload.lastName}`,
           age: 23,
           gender: payload.gender,
           phone: payload.phone,
-          createdBy: "mock-user",
-          createdByRole: "NURSE",
         };
       }
 
@@ -57,6 +57,8 @@ export function usePatient(patientId: string) {
         await delay();
         return {
           patientId,
+          firstName: "John",
+          lastName: "Doe",
           displayName: "John Doe",
           age: 45,
           gender: "MALE",
@@ -150,7 +152,7 @@ export function useMedicalRecords(caseId: string) {
       }
 
       const res = await api.get<ApiResponse<MedicalRecordsResponse>>(
-        `/cases/${caseId}/medical-records`,
+        `/patients/cases/${caseId}/medical-records`,
       );
       return res.data.data;
     },
@@ -174,7 +176,7 @@ export function useCreateMedicalRecord(caseId: string) {
       }
 
       const res = await api.post<ApiResponse<CreateMedicalRecordResponse>>(
-        `/cases/${caseId}/medical-records`,
+        `/patients/cases/${caseId}/medical-records`,
         payload,
       );
       return res.data.data;
@@ -205,7 +207,7 @@ export function useUpdateMedicalRecord(caseId: string, recordId: string) {
       }
 
       const res = await api.patch<ApiResponse<UpdateMedicalRecordResponse>>(
-        `/cases/${caseId}/medical-records/${recordId}`,
+        `/patients/cases/${caseId}/medical-records/${recordId}`,
         payload,
       );
       return res.data.data;

@@ -62,7 +62,7 @@ export function AppointmentForm() {
             {
                 patientId: form.patientId,
                 doctorId: form.doctorId,
-                date: form.date,
+                date: new Date(form.date).toISOString(),
                 status: form.status,
             },
             {
@@ -143,14 +143,14 @@ export function AppointmentForm() {
                     )}
                 </div>
 
-                {/* Appointment date */}
+                {/* Appointment date and time */}
                 <div>
                     <label className="block text-xs text-gray-500 mb-1">
-                        Appointment Date
+                        Appointment Date & Time
                     </label>
 
                     <input
-                        type="date"
+                        type="datetime-local"
                         name="date"
                         value={form.date}
                         onChange={handleChange}

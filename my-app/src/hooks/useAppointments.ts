@@ -34,23 +34,29 @@ export function useAppointments(filters?: { status?: AppointmentStatus }) {
                 const allAppointments: AppointmentsResponse['data'] = [
                     {
                         appointmentId: 'appointment-001',
+                        patientId: 'patient-001',
                         patientName: 'John Doe',
+                        doctorId: 'doctor-001',
                         doctorName: 'Dr. Sara Ahmed',
-                        date: '2026-05-10',
+                        date: '2026-05-10T09:00:00.000Z',
                         status: 'SCHEDULED',
                     },
                     {
                         appointmentId: 'appointment-002',
+                        patientId: 'patient-002',
                         patientName: 'Layla Hassan',
+                        doctorId: 'doctor-002',
                         doctorName: 'Dr. Khaled Omar',
-                        date: '2026-05-11',
+                        date: '2026-05-11T09:00:00.000Z',
                         status: 'COMPLETED',
                     },
                     {
                         appointmentId: 'appointment-003',
+                        patientId: 'patient-003',
                         patientName: 'Omar Khalil',
+                        doctorId: 'doctor-001',
                         doctorName: 'Dr. Sara Ahmed',
-                        date: '2026-05-12',
+                        date: '2026-05-12T09:00:00.000Z',
                         status: 'CANCELLED',
                     },
                 ]

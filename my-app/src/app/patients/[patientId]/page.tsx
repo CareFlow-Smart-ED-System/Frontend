@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useParams} from "next/navigation";
+import { useParams } from "next/navigation";
 import {
   useLinkPatientAccount,
   usePatient,
@@ -169,7 +169,8 @@ export default function PatientProfilePage() {
           <div className="lg:col-span-2 space-y-6">
             <EditPatientForm
               patientId={patient.patientId}
-              currentDisplayName={patient.displayName}
+              currentFirstName={patient.firstName}
+              currentLastName={patient.lastName}
               currentGender={patient.gender}
               currentPhone={patient.phone}
             />
@@ -245,17 +246,20 @@ function InfoRow({ label, value }: { label: string; value: string }) {
 
 function EditPatientForm({
   patientId,
-  currentDisplayName,
+  currentFirstName,
+  currentLastName,
   currentGender,
   currentPhone,
 }: {
   patientId: string;
-  currentDisplayName: string;
+  currentFirstName: string;
+  currentLastName: string;
   currentGender: Gender;
   currentPhone: string;
 }) {
   const [form, setForm] = useState({
-    displayName: currentDisplayName,
+    firstName: currentFirstName,
+    lastName: currentLastName,
     dateOfBirth: "",
     gender: currentGender,
     phone: currentPhone,
@@ -298,18 +302,35 @@ function EditPatientForm({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Display name */}
-        <div className="md:col-span-2">
+        {/* First name */}
+        <div>
           <label className="block text-xs text-gray-500 mb-1">
-            Display Name
+            First Name
           </label>
 
           <input
             type="text"
-            name="displayName"
-            value={form.displayName}
+            name="firstName"
+            value={form.firstName}
             onChange={handleChange}
-            placeholder="John Michael Doe"
+            placeholder="John"
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-200"
+            required
+          />
+        </div>
+
+        {/* Last name */}
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">
+            Last Name
+          </label>
+
+          <input
+            type="text"
+            name="lastName"
+            value={form.lastName}
+            onChange={handleChange}
+            placeholder="Michael"
             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-200"
             required
           />

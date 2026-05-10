@@ -134,8 +134,8 @@ export default function NotificationsPage() {
                             <div
                                 key={notification.id}
                                 className={`border rounded-2xl p-4 ${notification.isRead
-                                        ? "bg-white border-gray-100"
-                                        : "bg-red-50 border-red-100"
+                                    ? "bg-white border-gray-100"
+                                    : "bg-red-50 border-red-100"
                                     }`}
                             >
                                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
@@ -160,8 +160,14 @@ export default function NotificationsPage() {
                                             )}
 
                                             <span>
-                                                {new Date(notification.createdAt).toLocaleDateString()}
+                                                Created: {new Date(notification.createdAt).toLocaleString()}
                                             </span>
+
+                                            {notification.readAt && (
+                                                <span>
+                                                    Read: {new Date(notification.readAt).toLocaleString()}
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
 

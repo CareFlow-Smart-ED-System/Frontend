@@ -11,12 +11,12 @@ export interface QuickRegisterPatientPayload {
 export interface QuickRegisterPatientResponse {
     message: string
     patientId: string
+    firstName: string
+    lastName: string
     displayName: string
     age: number
     gender: Gender
     phone: string
-    createdBy: string
-    createdByRole: string
 }
 
 export interface LinkPatientAccountPayload {
@@ -33,6 +33,8 @@ export interface LinkPatientAccountResponse {
 
 export interface PatientProfile {
     patientId: string
+    firstName: string
+    lastName: string
     displayName: string
     age: number
     gender: Gender
@@ -40,7 +42,8 @@ export interface PatientProfile {
 }
 
 export interface UpdatePatientPayload {
-    displayName: string
+    firstName: string
+    lastName: string
     dateOfBirth: string
     gender: Gender
     phone: string

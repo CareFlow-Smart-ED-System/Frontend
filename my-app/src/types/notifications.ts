@@ -12,6 +12,7 @@ export interface NotificationItem {
     message: string
     type: NotificationType
     isRead: boolean
+    readAt?: string | null
     createdAt: string
 }
 

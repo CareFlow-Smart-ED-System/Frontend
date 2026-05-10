@@ -71,7 +71,7 @@ export function AppointmentsTable({ appointments }: Props) {
                                 </td>
 
                                 <td className="px-4 py-3 text-gray-600">
-                                    {new Date(appointment.date).toLocaleDateString()}
+                                    {new Date(appointment.date).toLocaleString()}
                                 </td>
 
                                 <td className="px-4 py-3">
