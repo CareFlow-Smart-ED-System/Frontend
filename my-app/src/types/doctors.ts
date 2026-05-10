@@ -44,6 +44,8 @@ export interface LabResult {
   result: string
   date: string
   status: LabResultStatus
+  reportFileUrl?: string   
+  reportFileName?: string 
 }
 
 export interface LabResultsResponse {
@@ -65,6 +67,8 @@ export interface ImagingReport {
   report: string
   date: string
   status: ImagingStatus
+  reportFileUrl?: string 
+  reportFileName?: string  
 }
 
 export interface ImagingResponse {
@@ -102,4 +106,67 @@ export interface MedicationsResponse {
   limit: number
   totalPages: number
   data: Medication[]
+}
+export interface CreateLabOrderPayload {
+  type: string
+  notes?: string
+}
+
+export interface CreateLabOrderResponse {
+  id: string
+  caseId: string
+  type: string
+  notes: string | null
+  date: string
+  status: string
+}
+
+export interface CreateImagingOrderPayload {
+  type: string
+  region?: string
+  summary?: string
+}
+
+export interface CreateImagingOrderResponse {
+  id: string
+  caseId: string
+  type: string
+  region: string | null
+  summary: string | null
+  date: string
+  status: string
+}
+
+export interface UploadLabReportPayload {
+  reportFile: File
+  notes?: string
+}
+
+export interface UploadLabReportResponse {
+  message: string
+  data: {
+    id: string
+    caseId: string
+    reportFileUrl: string
+    reportFileName: string
+    uploadedBy: string
+    uploadedAt: string
+  }
+}
+
+export interface UploadImagingReportPayload {
+  reportFile: File
+  summary?: string
+}
+
+export interface UploadImagingReportResponse {
+  message: string
+  data: {
+    id: string
+    caseId: string
+    reportFileUrl: string
+    reportFileName: string
+    reportedBy: string
+    uploadedAt: string
+  }
 }

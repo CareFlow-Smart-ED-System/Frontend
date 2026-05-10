@@ -46,12 +46,15 @@ import { AssignDoctorForm } from "@/components/cases/AssignDoctorForm";
 // POST  /api/v1/cases/{caseId}/medical-records
 // POST  /api/v1/cases/{caseId}/medications/administrations
 // GET   /api/v1/doctors/cases/{caseId}/lab-results
-// GET   /api/v1/doctors/cases/{caseId}/imaging-reports
+// GET   /api/v1/doctors/cases/{caseId}/imaging
 // POST  /api/v1/doctors/cases/{caseId}/medications
+// POST  /api/v1/lab-results/{labResultId}/upload-report
+// POST  /api/v1/imaging/{imagingId}/upload-report
 //
 // Notes:
 // - Summary is fetched only when the case is completed.
-// - Medications list endpoint is pending backend support.
+// - RADIOLOGIST can view timeline and imaging tabs.
+// - LAB_STAFF can view timeline and labs tabs.
 // ─────────────────────────────────────────────────────────────
 
 type Tab =
@@ -67,7 +70,7 @@ type Tab =
   | "assignDoctor"
   | "summary";
 
-type Role = "DOCTOR" | "NURSE" | "ADMIN" | "RECEPTIONIST" | "PATIENT";
+type Role = "DOCTOR" | "NURSE" | "ADMIN" | "RECEPTIONIST" | "PATIENT" | "RADIOLOGIST" | "LAB_STAFF";
 
 export default function CaseDetailPage() {
   const { caseId } = useParams<{ caseId: string }>();
@@ -81,10 +84,12 @@ export default function CaseDetailPage() {
   const isAdmin = role === "ADMIN";
   const isReceptionist = role === "RECEPTIONIST";
   const isPatient = role === "PATIENT";
+  const isRadiologist = role === "RADIOLOGIST";
+  const isLabStaff = role === "LAB_STAFF";
 
   const isClinicalRole = isDoctor || isNurse;
   const canViewTriage = isDoctor || isNurse || isAdmin;
-  const canUseCasePage = isDoctor || isNurse || isAdmin || isReceptionist;
+  const canUseCasePage = isDoctor || isNurse || isAdmin || isReceptionist || isRadiologist || isLabStaff;
 
   const { data: caseData, isLoading, isError } = useCase(caseId);
   const { data: timeline } = useCaseTimeline(caseId);
@@ -116,6 +121,14 @@ export default function CaseDetailPage() {
   // - Should not see clinical tabs.
   // - Can view basic case progress only.
   //
+  // RADIOLOGIST:
+  // - Can view timeline and imaging tabs.
+  // - Can upload imaging reports.
+  //
+  // LAB_STAFF:
+  // - Can view timeline and labs tabs.
+  // - Can upload lab reports.
+  //
   // PATIENT:
   // - Should not access this internal staff case page.
   // ─────────────────────────────────────────────────────────────
@@ -137,8 +150,13 @@ export default function CaseDetailPage() {
       allowedTabs.push({ key: "medicalRecords", label: "Medical Records" });
     }
 
-    if (isDoctor) {
+    // Doctor and Lab Staff can see labs tab
+    if (isDoctor || isLabStaff) {
       allowedTabs.push({ key: "labs", label: "Lab Results" });
+    }
+
+    // Doctor and Radiologist can see imaging tab
+    if (isDoctor || isRadiologist) {
       allowedTabs.push({ key: "imaging", label: "Imaging" });
     }
 
@@ -160,6 +178,8 @@ export default function CaseDetailPage() {
     isNurse,
     isClinicalRole,
     isDoctor,
+    isLabStaff,
+    isRadiologist,
     canViewTriage,
     caseData?.status,
   ]);
@@ -313,13 +333,13 @@ export default function CaseDetailPage() {
           <MedicalRecordsTab caseId={caseId} userRole={role} />
         )}
 
-        {/* Doctor-only lab results tab */}
-        {visibleActiveTab === "labs" && isDoctor && (
+        {/* Doctor and Lab Staff lab results tab */}
+        {visibleActiveTab === "labs" && (isDoctor || isLabStaff) && (
           <LabResultsTab caseId={caseId} />
         )}
 
-        {/* Doctor-only imaging tab */}
-        {visibleActiveTab === "imaging" && isDoctor && (
+        {/* Doctor and Radiologist imaging tab */}
+        {visibleActiveTab === "imaging" && (isDoctor || isRadiologist) && (
           <ImagingTab caseId={caseId} />
         )}
 
