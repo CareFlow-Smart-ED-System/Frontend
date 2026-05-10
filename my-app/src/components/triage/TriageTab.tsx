@@ -187,7 +187,7 @@ function TriageForm({ caseId }: { caseId: string }) {
           name="severity"
           value={form.severity}
           onChange={handleChange}
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="w-full border rounded px-3 py-2 text-sm text-black"
         >
           <option value="CRITICAL">Critical</option>
           <option value="URGENT">Urgent</option>
@@ -196,7 +196,7 @@ function TriageForm({ caseId }: { caseId: string }) {
       </div>
 
       {/* Vitals grid */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 text-black">
         {[
           { name: 'temperature',     label: 'Temperature (°C)',  placeholder: '38.9' },
           { name: 'heartRate',       label: 'Heart Rate (bpm)',  placeholder: '110' },

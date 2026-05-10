@@ -15,8 +15,8 @@ import { QueueEntry } from '@/types/queue'
 // - Lets staff open a case from the queue list.
 //
 // Endpoints used through hooks:
-// GET /api/v1/queue
-// GET /api/v1/queue/stats
+// GET /api/v1/queue/priority
+// GET /api/v1/queue/statistics
 // ─────────────────────────────────────────────────────────────
 
 function StatCard({

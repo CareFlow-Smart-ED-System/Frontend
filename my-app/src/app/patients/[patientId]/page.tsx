@@ -221,7 +221,7 @@ function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <p className="text-xs text-gray-500 mb-0.5">{label}</p>
-      <p className="text-sm font-medium text-gray-900 break-words">
+      <p className="text-sm font-medium text-gray-900 wrap-break-words">
         {value || "—"}
       </p>
     </div>

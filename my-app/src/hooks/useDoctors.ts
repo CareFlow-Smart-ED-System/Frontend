@@ -21,14 +21,16 @@ import {
 
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true'
 
+type ApiResponse<T> = { success: boolean; data: T; timestamp: string }
+
 // GET /api/v1/doctors
 export function useDoctors() {
   return useQuery<DoctorsResponse>({
     queryKey: ['doctors'],
     queryFn: async () => {
       if (USE_MOCK) { await delay(); return MOCK_DOCTORS }
-      const res = await api.get<DoctorsResponse>('/doctors')
-      return res.data
+      const res = await api.get<ApiResponse<DoctorsResponse>>('/doctors')
+      return res.data.data
     },
     staleTime: 30000,
   })
@@ -40,10 +42,10 @@ export function useDoctorCases(doctorId: string, filters?: { status?: CaseStatus
     queryKey: ['doctors', 'me', 'cases', filters],
     queryFn: async () => {
       if (USE_MOCK) { await delay(); return MOCK_DOCTOR_CASES }
-      const res = await api.get<DoctorCasesResponse>('/doctors/me/cases', {
+      const res = await api.get<ApiResponse<DoctorCasesResponse>>('/doctors/me/cases', {
         params: filters,
       })
-      return res.data
+      return res.data.data
     },
     enabled: !!doctorId,
     staleTime: 10000,
@@ -56,8 +58,8 @@ export function useLabResults(caseId: string) {
     queryKey: ['cases', caseId, 'lab-results'],
     queryFn: async () => {
       if (USE_MOCK) { await delay(); return MOCK_LAB_RESULTS }
-      const res = await api.get<LabResultsResponse>(`/doctors/cases/${caseId}/lab-results`)
-      return res.data
+      const res = await api.get<ApiResponse<LabResultsResponse>>(`/doctors/cases/${caseId}/lab-results`)
+      return res.data.data
     },
     enabled: !!caseId,
     staleTime: 15000,
@@ -70,10 +72,10 @@ export function useImaging(caseId: string) {
     queryKey: ['cases', caseId, 'imaging'],
     queryFn: async () => {
       if (USE_MOCK) { await delay(); return MOCK_IMAGING }
-      const res = await api.get<ImagingResponse>(
+      const res = await api.get<ApiResponse<ImagingResponse>>(
         `/doctors/cases/${caseId}/imaging-reports`
       )
-      return res.data
+      return res.data.data
     },
     enabled: !!caseId,
     staleTime: 15000,
@@ -99,11 +101,11 @@ export function usePrescribeMedication(caseId: string) {
           },
         }
       }
-      const res = await api.post<PrescribeMedicationResponse>(
+      const res = await api.post<ApiResponse<PrescribeMedicationResponse>>(
         `/doctors/cases/${caseId}/medications`,
         payload
       )
-      return res.data
+      return res.data.data
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['doctors', 'cases', caseId, 'medications'] })
@@ -112,15 +114,14 @@ export function usePrescribeMedication(caseId: string) {
   })
 }
 
-
-// GET /api/v1/cases/{caseId}/medications
+// GET /api/v1/doctors/cases/{caseId}/medications
 export function useMedications(caseId: string) {
   return useQuery<MedicationsResponse>({
-    queryKey: ['cases', caseId, 'medications'],
+    queryKey: ['doctors', 'cases', caseId, 'medications'],
     queryFn: async () => {
       if (USE_MOCK) { await delay(); return MOCK_MEDICATIONS }
-      const res = await api.get<MedicationsResponse>(`/cases/${caseId}/medications`)
-      return res.data
+      const res = await api.get<ApiResponse<MedicationsResponse>>(`/doctors/cases/${caseId}/medications`)
+      return res.data.data
     },
     enabled: !!caseId,
     staleTime: 10000,

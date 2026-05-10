@@ -70,7 +70,7 @@ function AddNoteForm({ caseId }: { caseId: string }) {
         onChange={(e) => { setNote(e.target.value); reset() }}
         placeholder="Enter clinical observation..."
         rows={3}
-        className="w-full border rounded px-3 py-2 text-sm resize-none"
+        className="w-full border rounded px-3 py-2 text-sm resize-none text-black"
         required
       />
 

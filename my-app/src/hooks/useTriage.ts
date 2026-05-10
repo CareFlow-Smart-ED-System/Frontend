@@ -10,6 +10,8 @@ import { MOCK_TRIAGE, MOCK_TRIAGE_HISTORY, delay } from '@/lib/mockData'
 
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true'
 
+type ApiResponse<T> = { success: boolean; data: T; timestamp: string }
+
 // POST /api/v1/cases/{caseId}/triage
 export function useRecordTriage(caseId: string) {
   const queryClient = useQueryClient()
@@ -25,12 +27,10 @@ export function useRecordTriage(caseId: string) {
           triageTime: new Date().toISOString(),
         }
       }
-      const res = await api.post<TriageResponse>(`/cases/${caseId}/triage`, payload)
-      return res.data
+      const res = await api.post<ApiResponse<TriageResponse>>(`/cases/${caseId}/triage`, payload)
+      return res.data.data
     },
     onSuccess: () => {
-      // Refresh triage, history, queue (severity change affects queue order)
-      // and timeline so the new triage entry appears there too
       queryClient.invalidateQueries({ queryKey: ['cases', caseId, 'triage'] })
       queryClient.invalidateQueries({ queryKey: ['cases', caseId, 'triage-history'] })
       queryClient.invalidateQueries({ queryKey: ['cases', caseId, 'timeline'] })
@@ -46,8 +46,8 @@ export function useTriage(caseId: string) {
     queryKey: ['cases', caseId, 'triage'],
     queryFn: async () => {
       if (USE_MOCK) { await delay(); return MOCK_TRIAGE }
-      const res = await api.get<TriageRecord>(`/cases/${caseId}/triage`)
-      return res.data
+      const res = await api.get<ApiResponse<TriageRecord>>(`/cases/${caseId}/triage`)
+      return res.data.data
     },
     enabled: !!caseId,
     staleTime: 10000,
@@ -60,8 +60,8 @@ export function useTriageHistory(caseId: string) {
     queryKey: ['cases', caseId, 'triage-history'],
     queryFn: async () => {
       if (USE_MOCK) { await delay(); return MOCK_TRIAGE_HISTORY }
-      const res = await api.get<TriageHistoryResponse>(`/cases/${caseId}/triage/history`)
-      return res.data
+      const res = await api.get<ApiResponse<TriageHistoryResponse>>(`/cases/${caseId}/triage/history`)
+      return res.data.data
     },
     enabled: !!caseId,
     staleTime: 10000,
