@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useCreateBill } from "@/hooks/useBilling"
 
 // ─────────────────────────────────────────────────────────────
@@ -17,9 +17,13 @@ import { useCreateBill } from "@/hooks/useBilling"
 // - If the case is not COMPLETED, backend should return 400.
 // ─────────────────────────────────────────────────────────────
 
-export function BillingForm() {
+interface Props {
+    initialCaseId?: string
+}
+
+export function BillingForm({ initialCaseId = "" }: Props) {
     const [form, setForm] = useState({
-        caseId: "",
+        caseId: initialCaseId,
         amount: "",
     })
 
@@ -30,6 +34,17 @@ export function BillingForm() {
         isSuccess,
         reset,
     } = useCreateBill()
+
+    useEffect(() => {
+        if (!initialCaseId) return
+
+        setForm((prev) => ({
+            ...prev,
+            caseId: initialCaseId,
+        }))
+
+        reset()
+    }, [initialCaseId, reset])
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         setForm((prev) => ({

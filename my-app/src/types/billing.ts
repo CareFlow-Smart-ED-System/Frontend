@@ -57,3 +57,12 @@ export interface CaseBilling {
     status: BillingStatus
     createdAt: string
 }
+
+export interface UnbilledCompletedCase {
+    caseId: string
+    patientId: string
+    patientName: string
+    status: 'COMPLETED'
+    severity?: string
+    arrivalTime: string
+}

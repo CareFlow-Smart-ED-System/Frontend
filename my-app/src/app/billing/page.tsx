@@ -1,18 +1,22 @@
 "use client"
 
-import { useBills } from "@/hooks/useBilling"
+import { useRef, useState } from "react"
+import { useBills, useUnbilledCompletedCases } from "@/hooks/useBilling"
 import { BillingForm } from "@/components/billing/BillingForm"
 import { BillingTable } from "@/components/billing/BillingTable"
+import { UnbilledCompletedCasesTable } from "@/components/billing/UnbilledCompletedCasesTable"
 
 // ─────────────────────────────────────────────────────────────
 // Billing Dashboard Page
 //
 // Purpose:
+// - Shows completed/discharged cases that do not have bills yet.
 // - Shows all billing records for Admin/Receptionist.
 // - Allows creating a new billing record for a completed case.
 // - Clicking a bill row opens the bill details page.
 //
 // Endpoints used through hooks:
+// GET  /api/v1/cases?status=COMPLETED
 // GET  /api/v1/billing
 // POST /api/v1/billing
 //
@@ -23,7 +27,25 @@ import { BillingTable } from "@/components/billing/BillingTable"
 // ─────────────────────────────────────────────────────────────
 
 export default function BillingPage() {
+    const [selectedCaseId, setSelectedCaseId] = useState("")
+    const formRef = useRef<HTMLDivElement | null>(null)
+
     const { data, isLoading, isError } = useBills()
+
+    const {
+        data: unbilledCases = [],
+        isLoading: isLoadingUnbilledCases,
+        isError: isUnbilledCasesError,
+    } = useUnbilledCompletedCases()
+
+    function handleSelectCaseForBilling(caseId: string) {
+        setSelectedCaseId(caseId)
+
+        formRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+        })
+    }
 
     return (
         <div className="min-h-screen bg-[#eef2f3]">
@@ -44,9 +66,30 @@ export default function BillingPage() {
                     </p>
                 </div>
 
+                {/* Discharged cases without bills */}
+                <div className="bg-white border border-gray-100 rounded-2xl p-5 mb-8">
+                    <div className="mb-5">
+                        <h2 className="text-sm font-semibold text-gray-900">
+                            Discharged Cases Without Bills
+                        </h2>
+
+                        <p className="text-xs text-gray-500 mt-1">
+                            {unbilledCases.length} completed case
+                            {unbilledCases.length === 1 ? "" : "s"} still need billing.
+                        </p>
+                    </div>
+
+                    <UnbilledCompletedCasesTable
+                        cases={unbilledCases}
+                        isLoading={isLoadingUnbilledCases}
+                        isError={isUnbilledCasesError}
+                        onCreateBill={handleSelectCaseForBilling}
+                    />
+                </div>
+
                 {/* Create bill form */}
-                <div className="mb-8">
-                    <BillingForm />
+                <div ref={formRef} className="mb-8 scroll-mt-6">
+                    <BillingForm initialCaseId={selectedCaseId} />
                 </div>
 
                 {/* Bills table */}

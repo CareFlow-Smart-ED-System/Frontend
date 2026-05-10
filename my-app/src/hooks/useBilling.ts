@@ -8,6 +8,7 @@ import {
     CreateBillResponse,
     UpdateBillStatusPayload,
     UpdateBillStatusResponse,
+    UnbilledCompletedCase,
 } from '@/types/billing'
 
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true'
@@ -85,6 +86,47 @@ export function useBills() {
     })
 }
 
+// GET /api/v1/billing/unbilled-completed-cases
+export function useUnbilledCompletedCases() {
+    return useQuery<UnbilledCompletedCase[]>({
+        queryKey: ['billing', 'unbilled-completed-cases'],
+        queryFn: async () => {
+            if (USE_MOCK) {
+                await delay()
+
+                return [
+                    {
+                        caseId: 'case-004',
+                        patientId: 'patient-004',
+                        patientName: 'Mariam Adel',
+                        status: 'COMPLETED',
+                        severity: 'URGENT',
+                        arrivalTime: '2026-05-10',
+                    },
+                    {
+                        caseId: 'case-005',
+                        patientId: 'patient-005',
+                        patientName: 'Youssef Ahmed',
+                        status: 'COMPLETED',
+                        severity: 'NON_URGENT',
+                        arrivalTime: '2026-05-10',
+                    },
+                ]
+            }
+
+            const res = await api.get<
+                | { total: number; data: UnbilledCompletedCase[] }
+                | ApiWrapper<{ total: number; data: UnbilledCompletedCase[] }>
+            >('/billing/unbilled-completed-cases')
+
+            const responseData = 'success' in res.data ? res.data.data : res.data
+
+            return responseData.data
+        },
+        staleTime: 10000,
+    })
+}
+
 // POST /api/v1/billing
 export function useCreateBill() {
     const queryClient = useQueryClient()
@@ -111,8 +153,11 @@ export function useCreateBill() {
             return 'success' in res.data ? res.data.data : res.data
         },
         onSuccess: (_data, variables) => {
-            // Refresh the billing dashboard and the case billing tab.
+            // Refresh the billing dashboard, unbilled cases table, and the case billing tab.
             queryClient.invalidateQueries({ queryKey: ['billing'] })
+            queryClient.invalidateQueries({
+                queryKey: ['billing', 'unbilled-completed-cases'],
+            })
             queryClient.invalidateQueries({
                 queryKey: ['cases', variables.caseId, 'billing'],
             })
