@@ -62,7 +62,6 @@ export function LogoNavbar() {
         { href: "/doctors/cases", label: "My Cases" },
         { href: "/queue", label: "Queue" },
         { href: "/cases", label: "All Cases" },
-        { href: "/appointments", label: "Appointments" },
       ],
 
       ADMIN: [

@@ -115,7 +115,7 @@ function MedicalRecordForm({ caseId }: { caseId: string }) {
                 value={form.diagnosis}
                 onChange={handleChange}
                 placeholder="Diagnosis"
-                className="w-full border rounded px-3 py-2 text-sm"
+                className="w-full border rounded px-3 py-2 text-sm text-black"
                 required
             />
 
@@ -125,7 +125,7 @@ function MedicalRecordForm({ caseId }: { caseId: string }) {
                 onChange={handleChange}
                 placeholder="Notes"
                 rows={3}
-                className="w-full border rounded px-3 py-2 text-sm resize-none"
+                className="w-full border rounded px-3 py-2 text-sm resize-none text-black"
                 required
             />
 
@@ -135,7 +135,7 @@ function MedicalRecordForm({ caseId }: { caseId: string }) {
                     value={form.chronicDiseases}
                     onChange={handleChange}
                     placeholder="Chronic diseases"
-                    className="w-full border rounded px-3 py-2 text-sm"
+                    className="w-full border rounded px-3 py-2 text-sm text-black"
                 />
 
                 <input
@@ -143,7 +143,7 @@ function MedicalRecordForm({ caseId }: { caseId: string }) {
                     value={form.familyHistory}
                     onChange={handleChange}
                     placeholder="Family history"
-                    className="w-full border rounded px-3 py-2 text-sm"
+                    className="w-full border rounded px-3 py-2 text-sm text-black"
                 />
             </div>
 

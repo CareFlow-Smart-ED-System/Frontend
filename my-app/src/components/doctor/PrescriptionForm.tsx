@@ -39,7 +39,7 @@ export function PrescriptionForm({ caseId, onSuccess }: Props) {
           value={name}
           onChange={(e) => { setName(e.target.value); reset() }}
           placeholder="e.g. Paracetamol"
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="w-full border rounded px-3 py-2 text-sm text-black"
           required
         />
       </div>
@@ -51,7 +51,7 @@ export function PrescriptionForm({ caseId, onSuccess }: Props) {
           value={dosage}
           onChange={(e) => { setDosage(e.target.value); reset() }}
           placeholder="e.g. 500mg every 6 hours"
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="w-full border rounded px-3 py-2 text-sm text-black"
           required
         />
       </div>

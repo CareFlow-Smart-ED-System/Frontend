@@ -10,32 +10,32 @@ export function DischargeSummaryCard({ summary }: Props) {
       <h3 className="text-lg font-semibold text-green-800">Discharge Summary</h3>
 
       <div>
-        <p className="text-xs text-gray-500 uppercase mb-1">Final Diagnosis</p>
-        <p className="text-sm font-medium">{summary.finalDiagnosis}</p>
+        <p className="text-sm font-bold text-gray-500 uppercase mb-1">Final Diagnosis</p>
+        <p className="text-sm font-medium text-black/70">{summary.finalDiagnosis}</p>
       </div>
 
       <div>
-        <p className="text-xs text-gray-500 uppercase mb-1">Treatment Summary</p>
-        <p className="text-sm">{summary.treatmentSummary}</p>
+        <p className="text-sm font-bold text-gray-500 uppercase mb-1">Treatment Summary</p>
+        <p className="text-sm font-medium text-black/70">{summary.treatmentSummary}</p>
       </div>
 
       <div>
-        <p className="text-xs text-gray-500 uppercase mb-2">Medications</p>
+        <p className="text-sm font-bold text-gray-500 uppercase mb-2">Medications</p>
         <ul className="space-y-1">
           {summary.medications.map((med, i) => (
-            <li key={i} className="text-sm">
-              <span className="font-medium">{med.name}</span> — {med.dosage}
+            <li key={i} className="text-sm text-black/70">
+              <span className="font-medium text-black/70">{med.name}</span> — {med.dosage}
             </li>
           ))}
         </ul>
       </div>
 
       <div>
-        <p className="text-xs text-gray-500 uppercase mb-1">Follow-up Recommendation</p>
-        <p className="text-sm">{summary.dischargeRecommendation}</p>
+        <p className="text-sm font-bold text-gray-500 uppercase mb-1">Follow-up Recommendation</p>
+        <p className="text-sm font-medium text-black/70">{summary.dischargeRecommendation}</p>
       </div>
 
-      <p className="text-xs text-gray-400">
+      <p className="text-sm text-black/70">
         Discharged at {new Date(summary.dischargedAt).toLocaleString()}
       </p>
     </div>

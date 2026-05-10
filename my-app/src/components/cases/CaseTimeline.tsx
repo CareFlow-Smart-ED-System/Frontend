@@ -1,12 +1,14 @@
 import { TimelineEntry, TimelineEntryType } from '@/types/cases'
 
-const typeConfig: Record<TimelineEntryType, { label: string; color: string }> = {
+const typeConfig: Record<string, { label: string; color: string }> = {
   TRIAGE:        { label: 'Triage',       color: 'bg-red-500' },
   VITAL_SIGNS:   { label: 'Vital Signs',  color: 'bg-blue-500' },
   MEDICATION:    { label: 'Medication',   color: 'bg-purple-500' },
   NOTE:          { label: 'Note',         color: 'bg-gray-400' },
   STATUS_UPDATE: { label: 'Status',       color: 'bg-green-500' },
 }
+
+const fallback = { label: 'Event', color: 'bg-gray-300' }
 
 interface Props {
   entries: TimelineEntry[]
@@ -20,7 +22,7 @@ export function CaseTimeline({ entries }: Props) {
   return (
     <ol className="relative border-l border-gray-200 ml-3">
       {entries.map((entry, i) => {
-        const { label, color } = typeConfig[entry.type]
+        const { label, color } = typeConfig[entry.type] ?? fallback
         return (
           <li key={i} className="mb-6 ml-6">
             <span className={`absolute -left-2 flex h-4 w-4 items-center justify-center rounded-full ${color}`} />

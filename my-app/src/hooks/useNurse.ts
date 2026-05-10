@@ -73,7 +73,7 @@ export function useVitalSigns(caseId: string) {
   });
 }
 
-// POST /api/v1/nurses/medications/{medicationId}/administr
+// POST /api/v1/nurses/medications/{medicationId}/administer
 export function useAdministerMedication(caseId: string) {
   const queryClient = useQueryClient();
   return useMutation<
@@ -95,8 +95,8 @@ export function useAdministerMedication(caseId: string) {
         };
       }
       const res = await api.post<ApiResponse<AdministerMedicationResponse>>(
-        `/nurses/medications/${payload.medicationId}/administr`,
-        payload,
+        `/nurses/medications/${payload.medicationId}/administer`,
+         { medicationId: payload.medicationId },
       );
       return res.data.data;
     },
