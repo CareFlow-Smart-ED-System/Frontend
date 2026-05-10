@@ -32,7 +32,9 @@ export function StaffUsersTable({ users }: Props) {
 
     const deleteMutation = useDeleteStaffUser()
 
-    if (users.length === 0) {
+    const safeUsers = Array.isArray(users) ? users : []
+
+    if (safeUsers.length === 0) {
         return (
             <div className="text-center py-12 text-gray-900">
                 No staff users found.
@@ -89,7 +91,7 @@ export function StaffUsersTable({ users }: Props) {
                     </thead>
 
                     <tbody>
-                        {users.map((user) => (
+                        {safeUsers.map((user) => (
                             <tr
                                 key={user.userId}
                                 className="border-b border-gray-100 text-gray-900"

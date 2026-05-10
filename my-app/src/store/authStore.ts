@@ -1,51 +1,57 @@
 import { create } from "zustand";
-
-interface User {
-  userId: string;
-  displayName: string;
-  role: "DOCTOR" | "NURSE" | "ADMIN" | "RECEPTIONIST" | "PATIENT";
-  email: string;
-}
+import { persist } from "zustand/middleware";
+import type { AuthUser } from "@/types/auth";
 
 interface AuthStore {
-  user: User | null;
+  user: AuthUser | null;
   accessToken: string | null;
-  setUser: (user: User, token: string) => void;
-  clearUser: () => void;
+  refreshToken: string | null;
+  isAuthenticated: boolean;
+
+  setAuth: (user: AuthUser, accessToken: string, refreshToken: string) => void;
+  setTokens: (accessToken: string, refreshToken: string) => void;
+  setUser: (user: AuthUser) => void;
+  clearAuth: () => void;
 }
 
-export const useAuthStore = create<AuthStore>((set) => ({
-  // ========================================================
-  // user: {
-  //   userId: 'mock-admin-001',
-  //   displayName: 'Admin Mona',
-  //   role: 'ADMIN',
-  //   email: 'admin@careflow.com',
-  // },
+export const useAuthStore = create<AuthStore>()(
+  persist(
+    (set) => ({
+      user: null,
+      accessToken: null,
+      refreshToken: null,
+      isAuthenticated: false,
 
-  // user: {
-  //   userId: "mock-receptionist-001",
-  //   displayName: "Receptionist John",
-  //   role: "RECEPTIONIST",
-  //   email: "receptionist@careflow.com",
-  // },
+      setAuth: (user, accessToken, refreshToken) =>
+        set({
+          user,
+          accessToken,
+          refreshToken,
+          isAuthenticated: true,
+        }),
 
-  // user: {
-  //   userId: "mock-nurse-001",
-  //   displayName: "Nurse Sarah",
-  //   role: "NURSE",
-  //   email: "nurse@careflow.com",
-  // },
+      setTokens: (accessToken, refreshToken) =>
+        set({
+          accessToken,
+          refreshToken,
+        }),
 
-  user: {
-    userId: "mock-doctor-001",
-    displayName: "Dr. Sara Ahmed",
-    role: "DOCTOR",
-    email: "sara@careflow.com",
-  },
+      setUser: (user) =>
+        set({
+          user,
+          isAuthenticated: true,
+        }),
 
-  accessToken: "mock-token",
-  // ========================================================
-  setUser: (user, accessToken) => set({ user, accessToken }),
-  clearUser: () => set({ user: null, accessToken: null }),
-}));
+      clearAuth: () =>
+        set({
+          user: null,
+          accessToken: null,
+          refreshToken: null,
+          isAuthenticated: false,
+        }),
+    }),
+    {
+      name: "careflow-auth",
+    }
+  )
+);

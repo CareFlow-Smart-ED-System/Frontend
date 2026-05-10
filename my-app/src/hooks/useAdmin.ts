@@ -19,6 +19,45 @@ const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true'
 // Small local delay so mock mode behaves like a real API request.
 const delay = (ms = 300) => new Promise((res) => setTimeout(res, ms))
 
+type ApiWrapper<T> = {
+    success: boolean
+    data: T
+    timestamp?: string
+}
+
+type BackendAdminUser = {
+    id: string
+    displayName: string
+    email: string
+    role: StaffRole
+    createdAt?: string
+    specialization?: string
+    department?: string
+    mustChangePassword?: boolean
+}
+
+type BackendAuditLog = {
+    id: string
+    action?: string
+    actionType?: string
+    userId?: string
+    performedBy?: string
+    targetId?: string
+    details?: string
+    timestamp: string
+}
+
+function normalizeAdminUser(user: BackendAdminUser): AdminUser {
+    return {
+        userId: user.id,
+        displayName: user.displayName,
+        email: user.email,
+        role: user.role,
+        specialization: user.specialization,
+        department: user.department,
+    }
+}
+
 // ─────────────────────────────────────────────────────────────
 // Admin Users
 //
@@ -38,8 +77,6 @@ export function useAdminUsers(filters?: { role?: StaffRole }) {
             if (USE_MOCK) {
                 await delay()
 
-                // Explicitly typed so TypeScript understands that role is StaffRole,
-                // not just a general string.
                 const mockUsers: AdminUser[] = [
                     {
                         userId: 'doctor-001',
@@ -82,11 +119,22 @@ export function useAdminUsers(filters?: { role?: StaffRole }) {
                 }
             }
 
-            const res = await api.get<AdminUsersResponse>('/admin/users', {
-                params: filters,
-            })
+            const res = await api.get<ApiWrapper<BackendAdminUser[]>>(
+                '/admin/users',
+                {
+                    params: filters,
+                }
+            )
 
-            return res.data
+            const users = res.data.data.map(normalizeAdminUser)
+
+            return {
+                total: users.length,
+                page: 1,
+                limit: users.length,
+                totalPages: 1,
+                data: users,
+            }
         },
         staleTime: 10000,
     })
@@ -112,15 +160,14 @@ export function useCreateStaffUser() {
                 }
             }
 
-            const res = await api.post<CreateStaffUserResponse>(
+            const res = await api.post<ApiWrapper<CreateStaffUserResponse>>(
                 '/admin/users',
                 payload
             )
 
-            return res.data
+            return res.data.data
         },
         onSuccess: () => {
-            // Refresh the users table after creating a new staff account.
             queryClient.invalidateQueries({ queryKey: ['admin', 'users'] })
         },
     })
@@ -141,12 +188,13 @@ export function useUpdateStaffUser(userId: string) {
                 }
             }
 
-            const res = await api.patch<UpdateStaffUserResponse>(
-                `/admin/users/${userId}`,
-                payload
-            )
+            const res = await api.patch<
+                ApiWrapper<UpdateStaffUserResponse> | UpdateStaffUserResponse
+            >(`/admin/users/${userId}`, payload)
 
-            return res.data
+            return 'data' in res.data && 'success' in res.data
+                ? res.data.data
+                : res.data
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['admin', 'users'] })
@@ -196,12 +244,17 @@ export function useResetStaffPassword(userId: string) {
                 }
             }
 
-            const res = await api.patch<ResetPasswordResponse>(
+            const res = await api.patch<ApiWrapper<Omit<ResetPasswordResponse, 'userId'>>>(
                 `/admin/users/${userId}/reset-password`,
-                payload
+                {
+                    newTemporaryPassword: payload.temporaryPassword,
+                }
             )
 
-            return res.data
+            return {
+                ...res.data.data,
+                userId,
+            }
         },
     })
 }
@@ -263,11 +316,29 @@ export function useAuditLogs(filters?: { actionType?: string; userId?: string })
                 }
             }
 
-            const res = await api.get<AuditLogsResponse>('/admin/audit-logs', {
-                params: filters,
-            })
+            const res = await api.get<ApiWrapper<BackendAuditLog[]>>(
+                '/admin/audit-logs',
+                {
+                    params: filters,
+                }
+            )
 
-            return res.data
+            const logs = res.data.data.map((log) => ({
+                id: log.id,
+                actionType: log.actionType ?? log.action ?? 'UNKNOWN_ACTION',
+                performedBy: log.performedBy ?? log.userId ?? 'Unknown user',
+                targetId: log.targetId ?? log.userId ?? '—',
+                details: log.details ?? log.action ?? 'No details available',
+                timestamp: log.timestamp,
+            }))
+
+            return {
+                total: logs.length,
+                page: 1,
+                limit: logs.length,
+                totalPages: 1,
+                data: logs,
+            }
         },
         staleTime: 15000,
     })
