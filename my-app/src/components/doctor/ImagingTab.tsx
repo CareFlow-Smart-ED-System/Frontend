@@ -101,7 +101,7 @@ export function ImagingTab({ caseId }: Props) {
                   <select
                     value={imagingType}
                     onChange={(e) => setImagingType(e.target.value)}
-                    className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-black/70"
                     required
                   >
                     <option value="">Select imaging type...</option>
@@ -118,7 +118,7 @@ export function ImagingTab({ caseId }: Props) {
                   <select
                     value={region}
                     onChange={(e) => setRegion(e.target.value)}
-                    className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-black/70"
                   >
                     <option value="">Select region...</option>
                     {BODY_REGIONS.map((r) => (
@@ -135,7 +135,7 @@ export function ImagingTab({ caseId }: Props) {
                     value={summary}
                     onChange={(e) => setSummary(e.target.value)}
                     rows={2}
-                    className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-black/70"
                     placeholder="Brief clinical history or reason for imaging..."
                   />
                 </div>

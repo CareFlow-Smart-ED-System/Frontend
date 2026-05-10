@@ -68,13 +68,13 @@ export function LabResultsTab({ caseId }: Props) {
           {!showOrderForm ? (
             <button
               onClick={() => setShowOrderForm(true)}
-              className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="text-sm bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
             >
               + Order Lab Test
             </button>
           ) : (
-            <form onSubmit={handleCreateOrder} className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
-              <h4 className="text-sm font-semibold text-blue-900 mb-3">New Lab Order</h4>
+            <form onSubmit={handleCreateOrder} className="bg-indigo-50 border border-indigo-200 rounded-2xl p-4">
+              <h4 className="text-sm font-semibold text-indigo-900 mb-3">New Lab Order</h4>
               
               <div className="space-y-3">
                 <div>
@@ -84,7 +84,7 @@ export function LabResultsTab({ caseId }: Props) {
                   <select
                     value={testType}
                     onChange={(e) => setTestType(e.target.value)}
-                    className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-black/70"
                     required
                   >
                     <option value="">Select test type...</option>
@@ -102,7 +102,7 @@ export function LabResultsTab({ caseId }: Props) {
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     rows={2}
-                    className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-black/70"
                     placeholder="Any specific instructions..."
                   />
                 </div>
@@ -111,7 +111,7 @@ export function LabResultsTab({ caseId }: Props) {
                   <button
                     type="submit"
                     disabled={createLabOrder.isPending || !testType}
-                    className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="text-sm bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {createLabOrder.isPending ? 'Creating...' : 'Create Order'}
                   </button>
