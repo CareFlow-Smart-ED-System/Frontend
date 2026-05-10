@@ -30,7 +30,7 @@ export function AssignDoctorForm({ caseId, onSuccess }: Props) {
         <select
           value={doctorId}
           onChange={(e) => setDoctorId(e.target.value)}
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="w-full border rounded px-3 py-2 text-sm text-black"
           required
           disabled={loadingDoctors}
         >
@@ -50,7 +50,7 @@ export function AssignDoctorForm({ caseId, onSuccess }: Props) {
         <select
           value={role}
           onChange={(e) => setRole(e.target.value as DoctorRole)}
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="w-full border rounded px-3 py-2 text-sm text-black"
         >
           <option value="PRIMARY">Primary</option>
           <option value="COLLABORATING">Collaborating</option>
@@ -64,7 +64,7 @@ export function AssignDoctorForm({ caseId, onSuccess }: Props) {
       <button
         type="submit"
         disabled={isPending || loadingDoctors}
-        className="w-full bg-blue-600 text-white py-2 rounded text-sm hover:bg-blue-700 disabled:opacity-50"
+        className="w-full bg-red-700 text-white py-2 rounded text-sm hover:bg-red-800 disabled:opacity-50"
       >
         {isPending ? 'Assigning...' : 'Assign Doctor'}
       </button>

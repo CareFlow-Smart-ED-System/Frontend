@@ -217,7 +217,7 @@ export default function LandingPage() {
             href="/login"
             className="inline-flex items-center gap-2 bg-white text-[#1a2e44] font-semibold text-sm px-7 py-3.5 rounded-full hover:bg-gray-100 transition-colors"
           >
-            Open Dashboard →
+            Sign in to CareFlow →
           </Link>
         </div>
       </section>

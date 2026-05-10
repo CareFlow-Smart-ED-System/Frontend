@@ -18,6 +18,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useMedications } from "@/hooks/useDoctors";
 import { TriageTab } from "@/components/triage/TriageTab";
 import { MedicalRecordsTab } from "@/components/patients/MedicalRecordsTab";
+import { AssignDoctorForm } from "@/components/cases/AssignDoctorForm";
 
 // ─────────────────────────────────────────────────────────────
 // Case Details Page
@@ -63,6 +64,7 @@ type Tab =
   | "labs"
   | "imaging"
   | "prescriptions"
+  | "assignDoctor"
   | "summary";
 
 type Role = "DOCTOR" | "NURSE" | "ADMIN" | "RECEPTIONIST" | "PATIENT";
@@ -128,6 +130,7 @@ export default function CaseDetailPage() {
     if (isNurse) {
       allowedTabs.push({ key: "vitals", label: "Vital Signs" });
       allowedTabs.push({ key: "notes", label: "Clinical Notes" });
+      allowedTabs.push({ key: "assignDoctor", label: "Assign Doctor" });
     }
 
     if (isClinicalRole) {
@@ -239,10 +242,11 @@ export default function CaseDetailPage() {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${visibleActiveTab === tab.key
-                ? "bg-red-700 text-white"
-                : "text-gray-600 hover:bg-[#f5f7f8]"
-                }`}
+              className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+                visibleActiveTab === tab.key
+                  ? "bg-red-700 text-white"
+                  : "text-gray-600 hover:bg-[#f5f7f8]"
+              }`}
             >
               {tab.label}
             </button>
@@ -272,9 +276,7 @@ export default function CaseDetailPage() {
                   </p>
                 </div>
               ) : (
-                <p className="text-sm text-gray-400">
-                  No doctor assigned yet
-                </p>
+                <p className="text-sm text-gray-400">No doctor assigned yet</p>
               )}
             </div>
 
@@ -319,6 +321,19 @@ export default function CaseDetailPage() {
         {/* Doctor-only imaging tab */}
         {visibleActiveTab === "imaging" && isDoctor && (
           <ImagingTab caseId={caseId} />
+        )}
+
+        {/* Nurse-only assign doctor tab */}
+        {visibleActiveTab === "assignDoctor" && isNurse && (
+          <div className="bg-white border border-gray-100 rounded-2xl p-5">
+            <h3 className="text-sm font-semibold text-gray-900 mb-4">
+              Assign Doctor
+            </h3>
+            <AssignDoctorForm
+              caseId={caseId}
+              onSuccess={() => setActiveTab("overview")}
+            />
+          </div>
         )}
 
         {/* Doctor/Nurse prescriptions tab */}
