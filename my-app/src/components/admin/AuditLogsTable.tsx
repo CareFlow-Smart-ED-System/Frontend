@@ -19,7 +19,9 @@ interface Props {
 }
 
 export function AuditLogsTable({ logs }: Props) {
-    if (logs.length === 0) {
+    const safeLogs = Array.isArray(logs) ? logs : []
+
+    if (safeLogs.length === 0) {
         return (
             <div className="text-center py-12 text-gray-900">
                 No audit logs found.
@@ -41,7 +43,7 @@ export function AuditLogsTable({ logs }: Props) {
                 </thead>
 
                 <tbody>
-                    {logs.map((log) => (
+                    {safeLogs.map((log) => (
                         <tr
                             key={log.id}
                             className="border-b border-gray-100 text-gray-900"

@@ -26,7 +26,8 @@ type ApiWrapper<T> = {
 }
 
 type BackendAdminUser = {
-    id: string
+    id?: string
+    userId?: string
     displayName: string
     email: string
     role: StaffRole
@@ -34,6 +35,14 @@ type BackendAdminUser = {
     specialization?: string
     department?: string
     mustChangePassword?: boolean
+}
+
+type BackendAdminUsersResponse = {
+    total: number
+    page: number
+    limit: number
+    totalPages: number
+    data: BackendAdminUser[]
 }
 
 type BackendAuditLog = {
@@ -47,9 +56,17 @@ type BackendAuditLog = {
     timestamp: string
 }
 
+type BackendAuditLogsResponse = {
+    total: number
+    page: number
+    limit: number
+    totalPages: number
+    data: BackendAuditLog[]
+}
+
 function normalizeAdminUser(user: BackendAdminUser): AdminUser {
     return {
-        userId: user.id,
+        userId: user.userId ?? user.id ?? "",
         displayName: user.displayName,
         email: user.email,
         role: user.role,
@@ -131,20 +148,21 @@ export function useAdminUsers(filters?: { role?: StaffRole }) {
                 }
             }
 
-            const res = await api.get<ApiWrapper<BackendAdminUser[]>>(
-                '/admin/users',
-                {
-                    params: filters,
-                }
-            )
+            const res = await api.get<
+                ApiWrapper<BackendAdminUsersResponse> | BackendAdminUsersResponse
+            >('/admin/users', {
+                params: filters,
+            })
 
-            const users = res.data.data.map(normalizeAdminUser)
+            const usersResponse = 'success' in res.data ? res.data.data : res.data
+
+            const users = usersResponse.data.map(normalizeAdminUser)
 
             return {
-                total: users.length,
-                page: 1,
-                limit: users.length,
-                totalPages: 1,
+                total: usersResponse.total,
+                page: usersResponse.page,
+                limit: usersResponse.limit,
+                totalPages: usersResponse.totalPages,
                 data: users,
             }
         },
@@ -328,14 +346,16 @@ export function useAuditLogs(filters?: { actionType?: string; userId?: string })
                 }
             }
 
-            const res = await api.get<ApiWrapper<BackendAuditLog[]>>(
-                '/admin/audit-logs',
-                {
-                    params: filters,
-                }
-            )
+            const res = await api.get<
+                ApiWrapper<BackendAuditLogsResponse> | BackendAuditLogsResponse
+            >('/admin/audit-logs', {
+                params: filters,
+            })
 
-            const logs = res.data.data.map((log) => ({
+            const auditResponse =
+                'success' in res.data ? res.data.data : res.data
+
+            const logs = auditResponse.data.map((log) => ({
                 id: log.id,
                 actionType: log.actionType ?? log.action ?? 'UNKNOWN_ACTION',
                 performedBy: log.performedBy ?? log.userId ?? 'Unknown user',
@@ -345,10 +365,10 @@ export function useAuditLogs(filters?: { actionType?: string; userId?: string })
             }))
 
             return {
-                total: logs.length,
-                page: 1,
-                limit: logs.length,
-                totalPages: 1,
+                total: auditResponse.total,
+                page: auditResponse.page,
+                limit: auditResponse.limit,
+                totalPages: auditResponse.totalPages,
                 data: logs,
             }
         },
