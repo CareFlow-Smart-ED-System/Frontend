@@ -25,7 +25,9 @@ export function AppointmentsTable({ appointments }: Props) {
     const [selectedAppointment, setSelectedAppointment] =
         useState<Appointment | null>(null)
 
-    if (appointments.length === 0) {
+    const safeAppointments = Array.isArray(appointments) ? appointments : []
+
+    if (safeAppointments.length === 0) {
         return (
             <div className="text-center py-12 text-gray-900">
                 No appointments found.
@@ -57,7 +59,7 @@ export function AppointmentsTable({ appointments }: Props) {
                     </thead>
 
                     <tbody>
-                        {appointments.map((appointment) => (
+                        {safeAppointments.map((appointment) => (
                             <tr
                                 key={appointment.appointmentId}
                                 className="border-b border-gray-100 text-gray-900"

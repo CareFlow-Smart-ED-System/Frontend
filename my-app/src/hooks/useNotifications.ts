@@ -11,6 +11,12 @@ const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true'
 // Small local delay so mock mode behaves like a real API request.
 const delay = (ms = 300) => new Promise((res) => setTimeout(res, ms))
 
+type ApiWrapper<T> = {
+    success: boolean
+    data: T
+    timestamp?: string
+}
+
 // ─────────────────────────────────────────────────────────────
 // Notifications
 //
@@ -76,11 +82,13 @@ export function useNotifications(filters?: { isRead?: boolean }) {
                 }
             }
 
-            const res = await api.get<NotificationsResponse>('/notifications', {
+            const res = await api.get<
+                NotificationsResponse | ApiWrapper<NotificationsResponse>
+            >('/notifications', {
                 params: filters,
             })
 
-            return res.data
+            return 'success' in res.data ? res.data.data : res.data
         },
         staleTime: 10000,
     })
@@ -101,11 +109,11 @@ export function useMarkNotificationRead() {
                 }
             }
 
-            const res = await api.patch<MarkNotificationReadResponse>(
-                `/notifications/${notificationId}/read`
-            )
+            const res = await api.patch<
+                MarkNotificationReadResponse | ApiWrapper<MarkNotificationReadResponse>
+            >(`/notifications/${notificationId}/read`)
 
-            return res.data
+            return 'success' in res.data ? res.data.data : res.data
         },
         onSuccess: () => {
             // Refresh notification list and unread bell count.
@@ -129,11 +137,11 @@ export function useMarkAllNotificationsRead() {
                 }
             }
 
-            const res = await api.patch<MarkAllNotificationsReadResponse>(
-                '/notifications/read-all'
-            )
+            const res = await api.patch<
+                MarkAllNotificationsReadResponse | ApiWrapper<MarkAllNotificationsReadResponse>
+            >('/notifications/read-all')
 
-            return res.data
+            return 'success' in res.data ? res.data.data : res.data
         },
         onSuccess: () => {
             // Refresh notification list and unread bell count.

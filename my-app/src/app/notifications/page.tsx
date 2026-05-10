@@ -36,6 +36,7 @@ export default function NotificationsPage() {
 
     const markReadMutation = useMarkNotificationRead()
     const markAllReadMutation = useMarkAllNotificationsRead()
+    const notifications = Array.isArray(data?.data) ? data.data : []
 
     return (
         <div className="min-h-screen bg-[#eef2f3]">
@@ -122,7 +123,7 @@ export default function NotificationsPage() {
                     )}
 
                     {/* Empty state */}
-                    {!isLoading && !isError && data?.data.length === 0 && (
+                    {!isLoading && !isError && notifications.length === 0 && (
                         <div className="text-center py-12 text-gray-900">
                             No notifications found.
                         </div>
@@ -130,7 +131,7 @@ export default function NotificationsPage() {
 
                     {/* Notifications list */}
                     <div className="space-y-3">
-                        {data?.data.map((notification) => (
+                        {notifications.map((notification) => (
                             <div
                                 key={notification.id}
                                 className={`border rounded-2xl p-4 ${notification.isRead

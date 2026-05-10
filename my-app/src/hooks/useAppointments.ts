@@ -14,6 +14,12 @@ const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true'
 // Small local delay so mock mode behaves like a real API request.
 const delay = (ms = 300) => new Promise((res) => setTimeout(res, ms))
 
+type ApiWrapper<T> = {
+    success: boolean
+    data: T
+    timestamp?: string
+}
+
 // ─────────────────────────────────────────────────────────────
 // Appointments
 //
@@ -77,11 +83,14 @@ export function useAppointments(filters?: { status?: AppointmentStatus }) {
                 }
             }
 
-            const res = await api.get<AppointmentsResponse>('/appointments', {
-                params: filters,
-            })
+            const res = await api.get<AppointmentsResponse | ApiWrapper<AppointmentsResponse>>(
+                '/appointments',
+                {
+                    params: filters,
+                }
+            )
 
-            return res.data
+            return 'success' in res.data ? res.data.data : res.data
         },
         staleTime: 10000,
     })

@@ -22,8 +22,10 @@ interface Props {
 export function BillingTable({ bills }: Props) {
     const router = useRouter()
 
-    if (bills.length === 0) {
-        return (
+const safeBills = Array.isArray(bills) ? bills : []
+
+if (safeBills.length === 0) {
+            return (
             <div className="text-center py-12 text-gray-900">
                 No billing records found.
             </div>
@@ -44,7 +46,7 @@ export function BillingTable({ bills }: Props) {
                 </thead>
 
                 <tbody>
-                    {bills.map((bill) => (
+                    {safeBills.map((bill) => (
                         <tr
                             key={bill.billId}
                             onClick={() => router.push(`/billing/${bill.billId}`)}

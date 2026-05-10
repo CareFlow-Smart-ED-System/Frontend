@@ -15,6 +15,13 @@ const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true'
 // Small local delay so mock mode behaves like a real API request.
 const delay = (ms = 300) => new Promise((res) => setTimeout(res, ms))
 
+
+type ApiWrapper<T> = {
+    success: boolean
+    data: T
+    timestamp?: string
+}
+
 // ─────────────────────────────────────────────────────────────
 // Billing
 //
@@ -68,8 +75,11 @@ export function useBills() {
                 }
             }
 
-            const res = await api.get<BillingResponse>('/billing')
-            return res.data
+            const res = await api.get<BillingResponse | ApiWrapper<BillingResponse>>(
+                '/billing'
+            )
+
+            return 'success' in res.data ? res.data.data : res.data
         },
         staleTime: 10000,
     })
@@ -93,8 +103,12 @@ export function useCreateBill() {
                 }
             }
 
-            const res = await api.post<CreateBillResponse>('/billing', payload)
-            return res.data
+            const res = await api.post<CreateBillResponse | ApiWrapper<CreateBillResponse>>(
+                '/billing',
+                payload
+            )
+
+            return 'success' in res.data ? res.data.data : res.data
         },
         onSuccess: (_data, variables) => {
             // Refresh the billing dashboard and the case billing tab.
@@ -124,8 +138,11 @@ export function useBillDetails(billId: string) {
                 }
             }
 
-            const res = await api.get<BillDetails>(`/billing/${billId}`)
-            return res.data
+            const res = await api.get<BillDetails | ApiWrapper<BillDetails>>(
+                `/billing/${billId}`
+            )
+
+            return 'success' in res.data ? res.data.data : res.data
         },
         enabled: !!billId,
         staleTime: 10000,
@@ -148,12 +165,11 @@ export function useUpdateBillStatus(billId: string) {
                 }
             }
 
-            const res = await api.patch<UpdateBillStatusResponse>(
-                `/billing/${billId}/status`,
-                payload
-            )
+            const res = await api.patch<
+                UpdateBillStatusResponse | ApiWrapper<UpdateBillStatusResponse>
+            >(`/billing/${billId}/status`, payload)
 
-            return res.data
+            return 'success' in res.data ? res.data.data : res.data
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['billing'] })
@@ -180,8 +196,11 @@ export function useCaseBilling(caseId: string) {
                 }
             }
 
-            const res = await api.get<CaseBilling>(`/cases/${caseId}/billing`)
-            return res.data
+            const res = await api.get<CaseBilling | ApiWrapper<CaseBilling>>(
+                `/cases/${caseId}/billing`
+            )
+
+            return 'success' in res.data ? res.data.data : res.data
         },
         enabled: !!caseId,
         staleTime: 10000,
