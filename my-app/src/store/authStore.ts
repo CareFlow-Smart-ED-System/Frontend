@@ -1,29 +1,35 @@
 import { create } from 'zustand'
-
-interface User {
-  userId: string
-  displayName: string
-  role: 'DOCTOR' | 'NURSE' | 'ADMIN' | 'RECEPTIONIST' | 'PATIENT'
-  email: string
-}
+import { persist } from 'zustand/middleware'
+import type { AuthUser } from '@/types/auth'
 
 interface AuthStore {
-  user: User | null
+  user: AuthUser | null
   accessToken: string | null
-  setUser: (user: User, token: string) => void
-  clearUser: () => void
+  refreshToken: string | null
+  _hasHydrated: boolean
+  setAuth: (user: AuthUser, accessToken: string, refreshToken: string) => void
+  clearAuth: () => void
+  setHasHydrated: (val: boolean) => void
 }
 
-export const useAuthStore = create<AuthStore>((set) => ({
-  // ── Hardcoded mock user — swap role here to test different views ──
-  user: {
-    userId: 'mock-admin-001',
-    displayName: 'Admin Mona',
-    role: 'ADMIN',
-    email: 'admin@careflow.com',
-  },
-  accessToken: 'mock-token',
-  // ─────────────────────────────────────────────────────────────────
-  setUser: (user, accessToken) => set({ user, accessToken }),
-  clearUser: () => set({ user: null, accessToken: null }),
-}))
+export const useAuthStore = create<AuthStore>()(
+  persist(
+    (set) => ({
+      user: null,
+      accessToken: null,
+      refreshToken: null,
+      _hasHydrated: false,
+      setAuth: (user, accessToken, refreshToken) =>
+        set({ user, accessToken, refreshToken }),
+      clearAuth: () =>
+        set({ user: null, accessToken: null, refreshToken: null }),
+      setHasHydrated: (val) => set({ _hasHydrated: val }),
+    }),
+    {
+      name: 'careflow-auth',
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true)
+      },
+    }
+  )
+)

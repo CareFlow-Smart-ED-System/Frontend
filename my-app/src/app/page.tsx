@@ -53,7 +53,7 @@ export default function LandingPage() {
 
         <div className="flex items-center gap-3">
           <Link
-            href="/queue"
+           href="/login"
             className="text-sm text-gray-700 font-medium hover:text-gray-900 transition-colors px-4 py-2"
           >
             Sign In
@@ -92,7 +92,7 @@ export default function LandingPage() {
 
         {/* CTA */}
         <Link
-          href="/queue"
+          href="/login"
           className="inline-flex items-center gap-2 bg-red-700 text-white text-sm font-medium px-7 py-3.5 rounded-full hover:bg-red-800 transition-colors"
         >
           View Live Queue Dashboard →
@@ -214,7 +214,7 @@ export default function LandingPage() {
             Start managing patients, queues, and clinical data from one system.
           </p>
           <Link
-            href="/queue"
+            href="/login"
             className="inline-flex items-center gap-2 bg-white text-[#1a2e44] font-semibold text-sm px-7 py-3.5 rounded-full hover:bg-gray-100 transition-colors"
           >
             Open Dashboard →
