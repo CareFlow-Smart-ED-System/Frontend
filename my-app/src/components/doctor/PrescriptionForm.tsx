@@ -66,7 +66,7 @@ export function PrescriptionForm({ caseId, onSuccess }: Props) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-blue-600 text-white py-2 rounded text-sm hover:bg-blue-700 disabled:opacity-50"
+        className="w-full bg-red-700 text-white py-2 rounded text-sm hover:bg-red-800 disabled:opacity-50"
       >
         {isPending ? 'Prescribing...' : 'Prescribe'}
       </button>

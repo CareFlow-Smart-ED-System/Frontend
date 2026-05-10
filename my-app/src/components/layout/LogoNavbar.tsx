@@ -4,9 +4,52 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
+import { useAuthStore } from "@/store/authStore";
+import { useMemo } from "react";
+
+type Role = "DOCTOR" | "NURSE" | "ADMIN" | "RECEPTIONIST";
+
+interface NavLink {
+  href: string;
+  label: string;
+}
 
 export function LogoNavbar() {
   const pathname = usePathname();
+  const { user } = useAuthStore();
+  const role = user?.role as Role | undefined;
+
+  // Define which links each role can see
+  const navLinks: NavLink[] = useMemo(() => {
+    if (!role) return [];
+
+    const linksByRole: Record<Role, NavLink[]> = {
+      RECEPTIONIST: [
+        { href: "/", label: "Home" },
+        { href: "/queue", label: "Queue" },
+        { href: "/billing", label: "Billing" },
+        { href: "/appointments", label: "Appointments" },
+      ],
+      NURSE: [
+        { href: "/", label: "Home" },
+        { href: "/queue", label: "Queue" },
+        { href: "/cases", label: "Cases" },
+      ],
+      DOCTOR: [
+        { href: "/", label: "Home" },
+        { href: "/queue", label: "Queue" },
+        { href: "/cases", label: "Cases" },
+      ],
+      ADMIN: [
+        { href: "/", label: "Home" },
+        { href: "/queue", label: "Queue" },
+        { href: "/admin/users", label: "Admin" },
+        { href: "/admin/audit-logs", label: "Audit Logs" },
+      ],
+    };
+
+    return linksByRole[role] || [];
+  }, [role]);
 
   if (pathname === "/") {
     return null;
@@ -27,28 +70,15 @@ export function LogoNavbar() {
         </Link>
 
         <div className="flex items-center gap-4 text-sm">
-          <Link href="/" className="text-gray-600 hover:text-gray-900">
-            Home
-          </Link>
-          <Link href="/queue" className="text-gray-600 hover:text-gray-900">
-            Queue
-          </Link>
-          <Link href="/cases" className="text-gray-600 hover:text-gray-900">
-            Cases
-          </Link>
-          <Link href="/billing" className="text-gray-600 hover:text-gray-900">
-            Billing
-          </Link>
-          <Link href="/appointments" className="text-gray-600 hover:text-gray-900">
-            Appointments
-          </Link>
-          <Link href="/admin/users" className="text-gray-600 hover:text-gray-900">
-            Admin
-          </Link>
-
-          <Link href="/admin/audit-logs" className="text-gray-600 hover:text-gray-900">
-            Audit Logs
-          </Link>
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-gray-600 hover:text-gray-900"
+            >
+              {link.label}
+            </Link>
+          ))}
 
           <NotificationBell />
         </div>

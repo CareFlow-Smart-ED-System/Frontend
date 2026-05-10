@@ -11,7 +11,7 @@ export function NotificationBell() {
   return (
     <Link
       href="/notifications"
-      className="relative inline-flex items-center justify-center w-9 h-9 rounded-full bg-white border border-gray-100 hover:bg-[#f5f7f8]"
+      className="relative inline-flex items-center justify-center w-9 h-9 rounded-full"
       title="Notifications"
     >
       <span className="text-lg">🔔</span>

@@ -99,7 +99,7 @@ function VitalSignsForm({ caseId }: { caseId: string }) {
       onSubmit={handleSubmit}
       className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-4"
     >
-      <h3 className="text-sm font-semibold text-blue-800">Record New Vital Signs</h3>
+      <h3 className="text-sm font-semibold text-black">Record New Vital Signs</h3>
 
       <div className="grid grid-cols-2 gap-3">
         {[
@@ -130,7 +130,7 @@ function VitalSignsForm({ caseId }: { caseId: string }) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-blue-600 text-white py-2 rounded text-sm hover:bg-blue-700 disabled:opacity-50"
+        className="w-full bg-red-700 text-white py-2 rounded text-sm hover:bg-red-800 disabled:opacity-50"
       >
         {isPending ? 'Saving...' : 'Record Vital Signs'}
       </button>
