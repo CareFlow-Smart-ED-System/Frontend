@@ -8,7 +8,13 @@ import { useAuthStore } from "@/store/authStore";
 import { logout } from "@/services/authService";
 import { useMemo, useState } from "react";
 
-type Role = "DOCTOR" | "NURSE" | "ADMIN" | "RECEPTIONIST";
+type Role =
+  | "DOCTOR"
+  | "NURSE"
+  | "ADMIN"
+  | "RECEPTIONIST"
+  | "RADIOLOGIST"
+  | "LAB_STAFF";
 
 interface NavLink {
   href: string;
@@ -27,6 +33,10 @@ function getRoleLabel(role: Role) {
       return "Nurse";
     case "RECEPTIONIST":
       return "Receptionist";
+    case "RADIOLOGIST":
+      return "Radiologist";
+    case "LAB_STAFF":
+      return "Lab Staff";
     default:
       return role;
   }
@@ -62,6 +72,18 @@ export function LogoNavbar() {
         { href: "/doctors/cases", label: "My Cases" },
         { href: "/queue", label: "Queue" },
         { href: "/cases", label: "All Cases" },
+      ],
+
+      RADIOLOGIST: [
+        { href: "/queue", label: "Queue" },
+        { href: "/cases", label: "Cases" },
+        { href: "/notifications", label: "Notifications" },
+      ],
+
+      LAB_STAFF: [
+        { href: "/queue", label: "Queue" },
+        { href: "/cases", label: "Cases" },
+        { href: "/notifications", label: "Notifications" },
       ],
 
       ADMIN: [

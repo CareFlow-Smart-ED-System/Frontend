@@ -17,6 +17,7 @@ import { useUpdateStaffUser } from "@/hooks/useAdmin"
 // Notes:
 // - If role is DOCTOR, specialization is shown.
 // - If role is NURSE, department is shown.
+// - RADIOLOGIST and LAB_STAFF do not require extra role-specific fields.
 // ─────────────────────────────────────────────────────────────
 
 interface Props {
@@ -127,6 +128,8 @@ export function EditStaffUserForm({ user, onCancel, onSuccess }: Props) {
                     >
                         <option value="DOCTOR">Doctor</option>
                         <option value="NURSE">Nurse</option>
+                        <option value="RADIOLOGIST">Radiologist</option>
+                        <option value="LAB_STAFF">Lab Staff</option>
                         <option value="RECEPTIONIST">Receptionist</option>
                         <option value="ADMIN">Admin</option>
                     </select>

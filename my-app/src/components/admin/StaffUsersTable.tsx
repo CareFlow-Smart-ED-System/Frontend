@@ -159,11 +159,18 @@ export function StaffUsersTable({ users }: Props) {
 
 // Small role badge helper so the role stands out in the table.
 function RoleBadge({ role }: { role: AdminUser["role"] }) {
-    const label = role.replace("_", " ")
+    const labels: Record<AdminUser["role"], string> = {
+        ADMIN: "Admin",
+        DOCTOR: "Doctor",
+        NURSE: "Nurse",
+        RECEPTIONIST: "Receptionist",
+        RADIOLOGIST: "Radiologist",
+        LAB_STAFF: "Lab Staff",
+    }
 
     return (
         <span className="inline-flex px-2.5 py-1 rounded-full bg-red-50 text-red-700 text-xs font-medium">
-            {label}
+            {labels[role] ?? role.replaceAll("_", " ")}
         </span>
     )
 }

@@ -93,6 +93,18 @@ export function useAdminUsers(filters?: { role?: StaffRole }) {
                         department: 'Emergency',
                     },
                     {
+                        userId: 'labstaff-001',
+                        displayName: 'Lab Tech Omar',
+                        email: 'omar.lab@careflow.com',
+                        role: 'LAB_STAFF',
+                    },
+                    {
+                        userId: 'radiologist-001',
+                        displayName: 'Dr. Lina Hassan',
+                        email: 'lina.radiology@careflow.com',
+                        role: 'RADIOLOGIST',
+                    },
+                    {
                         userId: 'receptionist-001',
                         displayName: 'Nada Hassan',
                         email: 'nada@careflow.com',

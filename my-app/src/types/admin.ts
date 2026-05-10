@@ -1,4 +1,11 @@
-export type StaffRole = 'ADMIN' | 'DOCTOR' | 'NURSE' | 'RECEPTIONIST'
+export type StaffRole =
+    | 'ADMIN'
+    | 'DOCTOR'
+    | 'NURSE'
+    | 'RECEPTIONIST'
+    | 'RADIOLOGIST'
+    | 'LAB_STAFF'
+
 export type StaffGender = 'MALE' | 'FEMALE'
 
 export interface AdminUser {

@@ -18,7 +18,7 @@ import { StaffGender, StaffRole } from "@/types/admin"
 // Conditional fields:
 // - DOCTOR requires specialization.
 // - NURSE requires department.
-// - ADMIN and RECEPTIONIST do not require extra role-specific fields.
+// - ADMIN, RECEPTIONIST, RADIOLOGIST, and LAB_STAFF do not require extra role-specific fields.
 // ─────────────────────────────────────────────────────────────
 
 export function StaffUserForm() {
@@ -99,7 +99,7 @@ export function StaffUserForm() {
                 </h2>
 
                 <p className="text-xs text-gray-500 mt-1">
-                    Add doctors, nurses, receptionists, or admins to the CareFlow ED system.
+                    Add doctors, nurses, radiologists, lab staff, receptionists, or admins to the CareFlow ED system.
                 </p>
             </div>
 
@@ -204,6 +204,8 @@ export function StaffUserForm() {
                     >
                         <option value="DOCTOR">Doctor</option>
                         <option value="NURSE">Nurse</option>
+                        <option value="RADIOLOGIST">Radiologist</option>
+                        <option value="LAB_STAFF">Lab Staff</option>
                         <option value="RECEPTIONIST">Receptionist</option>
                         <option value="ADMIN">Admin</option>
                     </select>
