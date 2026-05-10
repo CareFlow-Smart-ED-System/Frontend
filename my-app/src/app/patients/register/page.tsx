@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useQuickRegisterPatient } from "@/hooks/usePatients"
 import { Gender } from "@/types/patients"
@@ -18,6 +19,8 @@ import { Gender } from "@/types/patients"
 // ─────────────────────────────────────────────────────────────
 
 export default function QuickRegisterPatientPage() {
+    const router = useRouter()
+    
     const [form, setForm] = useState({
         firstName: "",
         lastName: "",
@@ -37,7 +40,6 @@ export default function QuickRegisterPatientPage() {
         reset,
     } = useQuickRegisterPatient()
 
-    // Updates the form whenever the user types/selects a value.
     function handleChange(
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) {
@@ -46,29 +48,18 @@ export default function QuickRegisterPatientPage() {
             [e.target.name]: e.target.value,
         }))
 
-        // Clear previous mutation status when editing again.
         reset()
         setCreatedPatientId(null)
         setCreatedPatientName(null)
     }
 
-    // Sends the quick registration request to the backend.
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
 
         mutate(form, {
             onSuccess: (data) => {
-                setCreatedPatientId(data.patientId)
-                setCreatedPatientName(data.displayName)
-
-                // Clear the form after successful registration.
-                setForm({
-                    firstName: "",
-                    lastName: "",
-                    dateOfBirth: "",
-                    gender: "FEMALE",
-                    phone: "",
-                })
+                // Navigate to the patient profile page
+                router.push(`/patients/${data.patientId}`)
             },
         })
     }
@@ -179,45 +170,12 @@ export default function QuickRegisterPatientPage() {
                         </div>
                     </div>
 
-                    {/* Error / success messages */}
+                    {/* Error message */}
                     {isError && (
                         <p className="text-sm text-red-600">
                             Failed to register patient. Please check the required fields and
                             try again.
                         </p>
-                    )}
-
-                    {isSuccess && createdPatientId && (
-                        <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-                            <p className="text-sm font-medium text-green-800">
-                                Patient registered successfully.
-                            </p>
-
-                            <p className="text-sm text-green-700 mt-1">
-                                Patient: {createdPatientName}
-                            </p>
-
-                            <p className="text-xs text-green-700 mt-1">
-                                Patient ID: {createdPatientId}
-                            </p>
-
-                            {/* Helpful next actions after quick registration */}
-                            <div className="flex flex-wrap gap-3 mt-4">
-                                <Link
-                                    href={`/patients/${createdPatientId}`}
-                                    className="text-xs bg-white border border-green-300 text-green-800 px-3 py-2 rounded-full hover:bg-green-100"
-                                >
-                                    View Patient Profile
-                                </Link>
-
-                                <Link
-                                    href="/cases"
-                                    className="text-xs bg-green-700 text-white px-3 py-2 rounded-full hover:bg-green-800"
-                                >
-                                    Go to Cases
-                                </Link>
-                            </div>
-                        </div>
                     )}
 
                     {/* Submit button */}
